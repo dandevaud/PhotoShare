@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using PhotoShare.Server.Contracts;
 using PhotoShare.Shared;
 
 namespace PhotoShare.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -13,10 +14,12 @@ namespace PhotoShare.Server.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IFileHandler _fileHandler;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IFileHandler fileHandler)
         {
             _logger = logger;
+            _fileHandler = fileHandler;
         }
 
         [HttpGet]
@@ -29,6 +32,22 @@ namespace PhotoShare.Server.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost("file")]
+        public async Task<ActionResult> UploadFile()
+        {
+            using var ms = new MemoryStream();
+            await HttpContext.Request.Body.CopyToAsync(ms);
+            ms.Position = 0;
+            await _fileHandler.SaveToFile($"{Environment.CurrentDirectory}\\Files\\{GetFileName(HttpContext.Request.Headers)}", ms);
+            return new OkResult();
+        }
+
+        private string GetFileName(IHeaderDictionary headers)
+        {
+            var fileName = headers.FirstOrDefault(x => x.Key == "FileName").Value.ToString();
+            return String.IsNullOrEmpty(fileName) ? "Test.pdf" : fileName ;
         }
     }
 }

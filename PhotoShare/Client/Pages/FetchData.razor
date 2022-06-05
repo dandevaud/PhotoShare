@@ -35,6 +35,7 @@ else
             }
         </tbody>
     </table>
+    <InputFile OnChange="OnFileUpload"></InputFile>
 }
 
 @code {
@@ -42,6 +43,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("api/WeatherForecast");
+    }
+    private async void OnFileUpload(InputFileChangeEventArgs args)
+    {
+        var content = new StreamContent(args.File.OpenReadStream(maxAllowedSize: 1000000000));
+        content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        content.Headers.Add("Filename", args.File.Name);
+        await Http.PostAsync("api/WeatherForecast/file", content );
     }
 }
