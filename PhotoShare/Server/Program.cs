@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using PhotoShare.Server.Database.Configuration;
+using PhotoShare.Server.Database.Context;
 using PhotoShare.Server.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.BindServices();
+
+
+builder.Services.AddDbContext<PhotoShareContext>(options => options.AddCorrectDatabase(builder.Configuration));
 
 var app = builder.Build();
 
