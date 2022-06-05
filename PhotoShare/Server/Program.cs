@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using PhotoShare.Server.IoC;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.BindServices();
 
 var app = builder.Build();
 
