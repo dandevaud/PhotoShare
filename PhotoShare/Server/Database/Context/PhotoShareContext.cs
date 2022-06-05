@@ -15,8 +15,8 @@ namespace PhotoShare.Server.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Picture>().HasOne<Group>("GroupId").WithMany("Pictures").HasForeignKey(p => p.GroupId);
-            modelBuilder.Entity<GroupKey>().HasOne<Group>("GroupId").WithOne("GroupKey");
+            modelBuilder.Entity<Picture>().HasOne<Group>().WithMany("Pictures").HasForeignKey(p => p.GroupId);
+            modelBuilder.Entity<GroupKey>().HasOne<Group>().WithOne("GroupKey");
         }
     }
       
