@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PhotoShare.Server.Contracts;
 using PhotoShare.Server.Database.Context;
+using PhotoShare.Server.Exceptions;
 using PhotoShare.Shared;
+using PhotoShare.Shared.Response;
 
 namespace PhotoShare.Server.Controllers
 {
@@ -14,57 +17,44 @@ namespace PhotoShare.Server.Controllers
     [ApiController]
     public class GroupsController : ControllerBase
     {
-        private readonly PhotoShareContext _context;
+        private readonly IGroupCrudExecutor _executor;
 
-        public GroupsController(PhotoShareContext context)
+        public GroupsController(IGroupCrudExecutor executor)
         {
-            _context = context;
+            _executor = executor;
         }
 
         // GET: api/Groups/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(Guid id)
         {
-          if (_context.Groups == null)
-          {
-              return NotFound();
-          }
-            var @group = await _context.Groups.FindAsync(id);
-
-            if (@group == null)
+            var group = await _executor.ReadGroup(id);
+                     
+            if (group == null)
             {
                 return NotFound();
             }
 
-            return @group;
+            return group;
         }
 
         // PUT: api/Groups/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGroup(Guid id, Group @group)
+        public async Task<IActionResult> PutGroup(Guid id, Group group, [FromQuery] Guid accessKey)
         {
-            if (id != @group.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(@group).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                group.Id = id;
+                await _executor.UpdateGroup(group, accessKey);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (InsufficientRightsException ex)
             {
-                if (!GroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Forbid();
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(id);
             }
 
             return NoContent();
@@ -73,41 +63,24 @@ namespace PhotoShare.Server.Controllers
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Group>> PostGroup(Group @group)
+        public async Task<ActionResult<GroupCreationResponse>> PostGroup(Group @group)
         {
-          if (_context.Groups == null)
-          {
-              return Problem("Entity set 'PhotoShareContext.Groups'  is null.");
-          }
-            _context.Groups.Add(@group);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetGroup", new { id = @group.Id }, @group);
+            return await _executor.CreateGroup(group);
         }
 
         // DELETE: api/Groups/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(Guid id)
+        public async Task<IActionResult> DeleteGroup(Guid id, [FromQuery] Guid accessKey)
         {
-            if (_context.Groups == null)
+            try
             {
-                return NotFound();
-            }
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group == null)
+                await _executor.DeleteGroup(id, accessKey);
+            } catch (InsufficientRightsException ex)
             {
-                return NotFound();
+                return Forbid();
             }
-
-            _context.Groups.Remove(@group);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok($"Successfully deleted group with id {id}");
         }
 
-        private bool GroupExists(Guid id)
-        {
-            return (_context.Groups?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }
