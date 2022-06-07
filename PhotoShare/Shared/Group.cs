@@ -15,7 +15,6 @@ namespace PhotoShare.Shared
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public GroupKey GroupKey { get; set; }
-        public List<Picture> Pictures { get; set; }
+       
     }
 }
