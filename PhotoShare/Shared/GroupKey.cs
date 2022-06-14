@@ -10,16 +10,12 @@ namespace PhotoShare.Shared
 {
     public class GroupKey
     {
+        [Key]
         public Guid GroupId { get; set; }
        
-        public KeyType KeyType { get; set; }
-
-        public Guid Key { get; set; }
+        public Guid AdminKey { get; set; }
+        public byte[]? EncryptionKey { get; set; }
     }
 
-    public enum KeyType
-    {
-        Encryption,
-        Administration
-    }
+   
 }

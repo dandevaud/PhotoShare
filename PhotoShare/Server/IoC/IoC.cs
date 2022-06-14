@@ -10,6 +10,7 @@ namespace PhotoShare.Server.IoC
         {
             serviceCollection.AddTransient<IFileHandler, FileHandler>();
             serviceCollection.AddTransient<IGroupCrudExecutor, GroupCrudExecutor>();
+            serviceCollection.AddTransient<IEncryptionHandler, EncryptionHandler>();
 
             return serviceCollection;
         }
