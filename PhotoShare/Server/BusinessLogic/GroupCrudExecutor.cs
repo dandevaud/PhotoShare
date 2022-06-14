@@ -30,12 +30,13 @@ namespace PhotoShare.Server.BusinessLogic
             group.Id = Guid.Empty;
             var feedback = await _context.AddAsync(group);
             await _context.SaveChangesAsync();
-           
+            var aes = Aes.Create();
+            aes.GenerateKey();
             await _context.AddAsync(new GroupKey
             {
                 GroupId = group.Id,
                 AdminKey = Guid.NewGuid(),
-                EncryptionKey = Aes.Create().Key
+                EncryptionKey = aes.Key
             }) ;
             
             await _context.SaveChangesAsync();
