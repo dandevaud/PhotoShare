@@ -15,7 +15,7 @@ namespace PhotoShare.Server.Database.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GroupKey>().HasKey(gk => new { gk.GroupId, gk.KeyType });
+            
         }
     }
       

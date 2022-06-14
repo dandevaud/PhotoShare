@@ -3,6 +3,7 @@ using PhotoShare.Server.Database.Context;
 using PhotoShare.Server.Exceptions;
 using PhotoShare.Shared;
 using PhotoShare.Shared.Response;
+using System.Security.Cryptography;
 
 namespace PhotoShare.Server.BusinessLogic
 {
@@ -19,8 +20,8 @@ namespace PhotoShare.Server.BusinessLogic
         private Guid GetGroupAdminKey(Guid groupid)
         {
             return _context.GroupKeys
-                .Where(k => k.GroupId.Equals(groupid) && k.KeyType.Equals(KeyType.Administration))
-                .Select(k => k.Key)
+                .Where(k => k.GroupId.Equals(groupid))
+                .Select(k => k.AdminKey)
                 .FirstOrDefault();
         }
 
@@ -29,15 +30,14 @@ namespace PhotoShare.Server.BusinessLogic
             group.Id = Guid.Empty;
             var feedback = await _context.AddAsync(group);
             await _context.SaveChangesAsync();
-
-            foreach(var key in (KeyType[]) Enum.GetValues(typeof(KeyType))){
-                await _context.AddAsync(new GroupKey
-                {
-                    GroupId = group.Id,
-                    KeyType = key,
-                    Key = Guid.NewGuid()
-                });
-            }
+           
+            await _context.AddAsync(new GroupKey
+            {
+                GroupId = group.Id,
+                AdminKey = Guid.NewGuid(),
+                EncryptionKey = Aes.Create().Key
+            }) ;
+            
             await _context.SaveChangesAsync();
             return new GroupCreationResponse()
             {
