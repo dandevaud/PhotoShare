@@ -5,19 +5,19 @@ namespace PhotoShare.Server.BusinessLogic
 {
     public class EncryptionHandler : IEncryptionHandler
     {
-        public Stream DecryptStream(Stream stream, Guid key)
+        public Stream DecryptStream(Stream stream, byte[] key, byte[] iv)
         {
-            using var aes = new AesManaged();
-            aes.Key = key.ToByteArray();
-            aes.IV = key.ToByteArray();
+            using var aes = Aes.Create();
+            aes.Key = key;
+            aes.IV = iv;
             return new CryptoStream(stream, aes.CreateDecryptor(), CryptoStreamMode.Read);
         }
 
-        public Stream EncryptStream(Stream stream, Guid key)
+        public Stream EncryptStream(Stream stream, byte[] key, byte[] iv)
         {
-            using var aes = new AesManaged();
-            aes.Key = key.ToByteArray();
-            aes.IV = key.ToByteArray();
+            using var aes = Aes.Create();
+            aes.Key = key;
+            aes.IV = iv;
             return new CryptoStream(stream, aes.CreateEncryptor(),CryptoStreamMode.Read);
 
         }
