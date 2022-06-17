@@ -14,9 +14,11 @@ namespace PhotoShare.Shared
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Guid GroupId { get; set; }
+        public string fileName { get; set; }
         public DateTime Date { get; set; }
         public string? Uploader { get; set; }
         public Guid UploaderKey { get; set; }
         public string Path { get; set; }
+        public byte[] IV { get; set; }
     }
 }
