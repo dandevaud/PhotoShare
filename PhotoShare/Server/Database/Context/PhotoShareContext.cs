@@ -8,7 +8,7 @@ namespace PhotoShare.Server.Database.Context
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupKey> GroupKeys { get; set; }
-
+        public PhotoShareContext() { }
         public PhotoShareContext(DbContextOptions options) : base(options) {
             Database.Migrate();
         }
