@@ -1,31 +1,25 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">PhotoShare</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+﻿<div class="top-row ps-3 navbar-nav navbar-dark">
+       <div class="nav-item px-3">
+           <div class="d-inline-flex">
+             <h4>Photoshare</h4>
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All" style="margin-left: 10px;">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
+            </div>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="group">
+                <button class="btn btn-outline-success">
+                <Radzen.Blazor.RadzenIcon Icon="add_circle" Style="vertical-align: bottom;" /> Gruppe erstellen
+                </button>
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
+            <PhotoShare.Client.Components.Groups.GroupSearch isHeader=true />
         </div>
-    </nav>
 </div>
+
+
 
 @code {
     private bool collapseNavMenu = true;

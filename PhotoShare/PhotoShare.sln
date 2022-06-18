@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoShare.Client", "Client
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoShare.Shared", "Shared\PhotoShare.Shared.csproj", "{7758CAC5-5A96-4CBE-A015-A05B4F6B726A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoShare.ServerTests", "PhotoShare.ServerTests\PhotoShare.ServerTests.csproj", "{6EDFF5ED-7279-44D8-BE76-78DD1649091A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotoShare.ServerTests", "PhotoShare.ServerTests\PhotoShare.ServerTests.csproj", "{6EDFF5ED-7279-44D8-BE76-78DD1649091A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
