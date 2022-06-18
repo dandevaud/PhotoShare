@@ -1,0 +1,30 @@
+﻿@inject HttpClient Http;
+@inject NavigationManager navManager;
+@inject NotificationService notification;
+<div class="@(isVertical ? "d-flex flex-column w-100 justify-content-evenly":"")">
+    @if(isVertical){
+         <div class=" w-100 text-center align-self-start"><h3>Gruppe Suchen</h3></div>
+        
+        <EditForm EditContext="new EditContext(new {})">
+           
+            <div class="form-control p-2 w-100">
+                <Radzen.Blazor.RadzenTextBox DisplayName="Search with GUID" @bind-Value="@GroupGuid" class="w-100" Placeholder="Gruppen Id eingeben" />
+            </div>
+             <div class="form-control p-2 w-100 justify-content-center d-inline-flex">
+                
+            </div>  
+             <div class="form-control p-2 w-100 justify-content-center d-inline-flex">
+                
+            </div>  
+            <div class="form-control p-2 w-100 justify-content-center d-inline-flex">
+                <button class="btn @(isHeader ? "btn-outline-info" : "btn-success") w-75" @onclick="OnClick">Suchen</button>
+            </div>  
+     </EditForm>
+    } else {
+        <EditForm EditContext="new EditContext(new {})">
+             <Radzen.Blazor.RadzenTextBox DisplayName="Search with GUID" @bind-Value="@GroupGuid" style="height: 30px;" Placeholder="Gruppen Id eingeben" />
+            <button class="btn @(isHeader ? "btn-outline-info" : "btn-success")" @onclick="OnClick">Suchen</button>
+     </EditForm>
+    }
+    
+</div>
