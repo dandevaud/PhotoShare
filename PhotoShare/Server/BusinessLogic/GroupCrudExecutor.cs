@@ -50,7 +50,7 @@ namespace PhotoShare.Server.BusinessLogic
 
         public async Task DeleteGroup(Guid groupId, Guid adminKey)
         {
-            if (!adminKey.Equals(GetGroupAdminKey(groupId))) throw new InsufficientRightsException();
+            if (!HasAdminAccessToGroup(groupId, adminKey)) throw new InsufficientRightsException();
             _context.Groups.Remove(new Group()
             {
                 Id = groupId
@@ -66,11 +66,16 @@ namespace PhotoShare.Server.BusinessLogic
 
         public async Task<Group> UpdateGroup(Group group, Guid adminKey)
         {
-            if (!adminKey.Equals(GetGroupAdminKey(group.Id))) throw new InsufficientRightsException();
+            if (!HasAdminAccessToGroup(group.Id,adminKey)) throw new InsufficientRightsException();
             if (!_context.Groups.Any(g => g.Id.Equals(group.Id))) throw new EntityNotFoundException();
             _context.Groups.Update(group);
             await _context.SaveChangesAsync();
             return group;
+        }
+
+        public bool HasAdminAccessToGroup(Guid groupId, Guid adminKey)
+        {
+            return adminKey.Equals(GetGroupAdminKey(groupId));
         }
     }
 }
