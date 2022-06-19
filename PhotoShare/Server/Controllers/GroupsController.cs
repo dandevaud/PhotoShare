@@ -38,6 +38,13 @@ namespace PhotoShare.Server.Controllers
             return group;
         }
 
+        // GET: api/Groups/hasAccess/5?adminkey=[adminkey]
+        [HttpGet("hasAccess/{id}")]
+        public ActionResult<bool> GetGroup(Guid id, [FromQuery] Guid adminkey)
+        {
+           return Ok(_executor.HasAdminAccessToGroup(id,adminkey));
+        }
+
         // PUT: api/Groups/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

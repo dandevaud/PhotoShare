@@ -1,0 +1,55 @@
+﻿@page "/group/{GroupId}"
+@using Radzen.Blazor
+@inject NavigationManager nav;
+@inject HttpClient http;
+@inject DialogService dialog;
+@inject NotificationService notification;
+
+<EditForm Model="typeof(Group)">
+<div class="name">
+        @if (editName)
+        {
+            <RadzenTextBox @bind-Value="Group.Name"></RadzenTextBox>  
+            <button class="btn btn-success" @onclick="UpdatedGroupAsync"><RadzenIcon Icon="done"/></button>
+        } else {
+            <h3>@(Group?.Name)</h3>
+            @if(isAdmin){
+                <a @onclick="() => editName = true"><RadzenIcon Icon="edit"></RadzenIcon></a>
+            }
+        }
+
+    </div>
+<div class="description">
+      @if (editDescription)
+        {
+            <RadzenTextArea @bind-Value="Group.Description"></RadzenTextArea>  
+            <button class="btn btn-success" @onclick="UpdatedGroupAsync"><RadzenIcon Icon="done"/></button>
+        } else {
+            <div> @(Group?.Description ?? "")</div>
+           @if(isAdmin){
+                <a @onclick="() => editDescription = true"><RadzenIcon Icon="edit"></RadzenIcon></a>
+           }
+        }
+
+    </div>
+</EditForm>
+
+
+
+@code {
+ async Task ShowErrorLoadingGroup()
+ {
+    
+   var result = await dialog.OpenAsync("Fehler aufgetreten", ds =>
+    @<div>
+                    <p Style="margin-bottom: 1rem">Ein Fehler beim Laden der Gruppe ist aufgetreten, bitte Überprüfen Sie die Eingabe.</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <RadzenButton Text="Ok" Click="() => {ds.Close(true); nav.NavigateTo(nav.BaseUri); }" Style="margin-bottom: 10px; width: 150px" />
+                                    
+                            </div>
+                        </div>
+    </div>
+         );
+    }
+}
