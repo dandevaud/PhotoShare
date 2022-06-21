@@ -1,0 +1,14 @@
+﻿@inject LocalApplicationStorageHandler store;
+@inject HttpClient http;
+
+<Radzen.Blazor.RadzenCard>
+    <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected"></Radzen.Blazor.RadzenCheckBox>
+    <Radzen.Blazor.RadzenImage Path="@(path)" Style="max-height: 200px; max-width: 200 px;"></Radzen.Blazor.RadzenImage>
+    @if (isEdit)
+    {
+        <div class="btn-group">
+            <Radzen.Blazor.RadzenButton ButtonStyle=ButtonStyle.Danger>Löschen</Radzen.Blazor.RadzenButton>
+        </div>
+    }
+
+</Radzen.Blazor.RadzenCard>

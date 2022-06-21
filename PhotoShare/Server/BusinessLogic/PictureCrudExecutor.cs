@@ -3,6 +3,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.Extensions.Configuration;
 using PhotoShare.Server.Contracts;
 using PhotoShare.Server.Database.Context;
+using PhotoShare.Shared;
 using PhotoShare.Shared.Request;
 using PhotoShare.Shared.Response;
 using System.IO.Compression;
@@ -31,8 +32,7 @@ namespace PhotoShare.Server.BusinessLogic
         {
             var picture = _context.Pictures.FirstOrDefault(p => p.Id == pictureId) ?? new Shared.Picture();
             if (picture.GroupId != groupId) return false;
-            if(_context.GroupKeys.FirstOrDefault(gk => gk.GroupId == groupId)?.AdminKey == deletionKey ||
-                picture.UploaderKey == deletionKey)
+            if (       HasAdminAccessToPicture(groupId, picture,  deletionKey))
             {
                 _fileHandler.DeleteFile(picture.Path);
                 _context.Pictures.Remove(picture);
@@ -42,17 +42,17 @@ namespace PhotoShare.Server.BusinessLogic
             return false;
         }
 
-        public async Task<PictureResponse> GetGroupPictures(Guid groupId)
+        public IReadOnlyCollection<PictureDto> GetGroupPictures(Guid groupId)
         {
-            var pictures = _context.Pictures.Where(p => p.GroupId == groupId);
-            return await HandleMultiplePictures(groupId, pictures);
+            var pictures = _context.Pictures.Where(p => p.GroupId == groupId).ToList();
+            return pictures;
 
         }
 
-        public async Task<PictureResponse> GetPictures(Guid groupId, List<Guid> pictureIds)
+        public IReadOnlyCollection<PictureDto> GetPictures(Guid groupId, List<Guid> pictureIds)
         {
-            var pictures = _context.Pictures.Where(p => p.GroupId == groupId && pictureIds.Contains(p.Id));
-            return await HandleMultiplePictures(groupId, pictures);
+            var pictures = _context.Pictures.Where(p => p.GroupId == groupId && pictureIds.Contains(p.Id)).ToList();
+            return pictures;
 
         }
 
@@ -84,18 +84,16 @@ namespace PhotoShare.Server.BusinessLogic
             return result;
         }
 
-        public async Task<PictureResponse> GetPicture(Guid groupId, Guid pictureId)
+
+        public T GetPicture<T>(Guid groupId, Guid pictureId) where T : PictureDto, new()
         {
-            var picture = _context.Pictures.First(p => p.Id == pictureId);
-            if (picture.GroupId != groupId) return new PictureResponse() { Count = 0 };
-            var key = _context.GroupKeys.First(gk => gk.GroupId == groupId).EncryptionKey;
-            var stream = _encryptionHandler.DecryptStream(await _fileHandler.GetFromFile(picture.Path), key, picture.IV);
-            return new PictureResponse()
-            {
-                Count = 1,
-                Result = stream
-            };
+            var picture = _context.Pictures.FirstOrDefault(p => p.Id == pictureId) ?? new Shared.Picture();
+            if (picture.GroupId != groupId) return new T();
+            return picture! as T;
         }
+
+
+       
 
         public async Task UploadPicture(PictureUploadRequest request)
         {
@@ -118,6 +116,19 @@ namespace PhotoShare.Server.BusinessLogic
                 GroupId = request.GroupId
             });
             await _context.SaveChangesAsync();
+        }
+
+        private bool HasAdminAccessToPicture(Guid groupId, Picture picture, Guid deletionKey)
+        {
+            return _context.GroupKeys.FirstOrDefault(gk => gk.GroupId == groupId)?.AdminKey == deletionKey ||
+                picture.UploaderKey == deletionKey;
+        }
+
+        public bool HasAdminAccess(Guid groupId, Guid pictureId, Guid deletionKey)
+        {
+            var picture = _context.Pictures.FirstOrDefault(p => p.Id == pictureId) ?? new Shared.Picture();
+            if (picture.GroupId != groupId) return false;
+            return HasAdminAccessToPicture(groupId, picture, deletionKey);
         }
     }
 }

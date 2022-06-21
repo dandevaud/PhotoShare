@@ -1,0 +1,6 @@
+﻿@inject HttpClient client;
+@inject NotificationService notification;
+
+@foreach(var picture in _picture){
+    <PictureCard pictureUI="@picture"  adminKey="@AdminKey"/>
+}

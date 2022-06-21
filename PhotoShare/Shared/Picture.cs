@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoShare.Shared.Response;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace PhotoShare.Shared
 {
-    public class Picture
+    public class Picture : PictureDto
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-        public Guid GroupId { get; set; }
-        public string fileName { get; set; }
-        public DateTime Date { get; set; }
-        public string? Uploader { get; set; }
-        public Guid UploaderKey { get; set; }
+      
         public string Path { get; set; }
         public byte[] IV { get; set; }
+        public Guid UploaderKey { get; set; }
+
+        public PictureDto GetDto()
+        {
+            return (PictureDto) this;
+        }
     }
 }

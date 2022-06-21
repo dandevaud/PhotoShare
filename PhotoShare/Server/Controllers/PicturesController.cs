@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PhotoShare.Server.Contracts;
 using PhotoShare.Server.Database.Context;
 using PhotoShare.Shared;
+using PhotoShare.Shared.Response;
 
 namespace PhotoShare.Server.Controllers
 {
@@ -14,66 +17,65 @@ namespace PhotoShare.Server.Controllers
     [ApiController]
     public class PicturesController : ControllerBase
     {
-        private readonly PhotoShareContext _context;
+        private readonly IPictureCrudExecutor _crudExecutor;
+        private readonly IPictureLoader _pictureLoader;
 
-        public PicturesController(PhotoShareContext context)
+        public PicturesController(IPictureCrudExecutor crudExecutor, IPictureLoader pictureLoader)
         {
-            _context = context;
+            _crudExecutor = crudExecutor;
+            _pictureLoader = pictureLoader;
         }
+
+
+        [HttpGet("ByGroup/{groupId}")]
+        public async Task<ActionResult<IReadOnlyCollection<PictureDto>>> GetGroupPictures(Guid groupId)
+        {
+            return Ok(_crudExecutor.GetGroupPictures(groupId));
+        }
+
 
 
         // GET: api/Pictures/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Picture>> GetPicture(Guid id)
+        [HttpGet("{groupid}/{pictureid}")]
+        public async Task<ActionResult<PictureDto>> GetPicture(Guid groupId, Guid pictureId)
         {
-          if (_context.Pictures == null)
-          {
-              return NotFound();
-          }
-            var picture = await _context.Pictures.FindAsync(id);
-
-            if (picture == null)
-            {
-                return NotFound();
-            }
-
-            return picture;
+            return Ok(_crudExecutor.GetPicture<PictureDto>(groupId, pictureId));
         }
 
-        
+        [HttpGet("Load/{groupid}/{pictureid}")]
+        public async Task<ActionResult<Stream>> LOadPicture(Guid groupId, Guid pictureId)
+        {
+            return new FileStreamResult(await _pictureLoader.LoadPicture(groupId, pictureId), "image/*");
+        }
+
+        // GET: api/Pictures/5
+        [HttpGet("HasAdminRights/{groupid}/{pictureid}")]
+        public async Task<ActionResult<bool>> GetHasAdminRights(Guid groupId, Guid pictureId, [FromQuery] Guid adminKey)
+        {
+            return Ok(_crudExecutor.GetPicture<PictureDto>(groupId, pictureId));
+        }
+
+
         // POST: api/Pictures
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Picture>> PostPicture(Picture picture)
         {
-          if (_context.Pictures == null)
-          {
-              return Problem("Entity set 'PhotoShareContext.Pictures'  is null.");
-          }
-            _context.Pictures.Add(picture);
-            await _context.SaveChangesAsync();
+            throw new NotImplementedException();
 
             return CreatedAtAction("GetPicture", new { id = picture.Id }, picture);
         }
 
         // DELETE: api/Pictures/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePicture(Guid id)
+        [HttpDelete("{groupId}/{pictureId}")]
+        public async Task<IActionResult> DeletePicture(Guid groupId, Guid pictureId, [FromQuery] Guid adminKey)
         {
-            if (_context.Pictures == null)
-            {
-                return NotFound();
-            }
-            var picture = await _context.Pictures.FindAsync(id);
-            if (picture == null)
-            {
-                return NotFound();
-            }
-
-            _context.Pictures.Remove(picture);
-            await _context.SaveChangesAsync();
+           if(! await _crudExecutor.DeletePicture(groupId, pictureId, adminKey)) return new ForbidResult("Not allowed");
 
             return NoContent();
         }
+
+
+       
     }
 }

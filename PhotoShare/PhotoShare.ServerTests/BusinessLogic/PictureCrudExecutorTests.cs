@@ -91,58 +91,29 @@ namespace PhotoShare.Server.BusinessLogic.Tests
         [TestMethod()]
         public async Task GetGroupPicturesTest()
         {
-            var pictures = await executor.GetGroupPictures(GroupId);
+            var pictures = executor.GetGroupPictures(GroupId);
             Assert.AreEqual(2, pictures.Count);
-            using var resultStream = pictures.Result;
-            resultStream.Position = 0;  
-            using var zis = new ZipInputStream(resultStream);
-            ZipEntry entry = zis.GetNextEntry();
-            while (entry != null)
-            {
-                Assert.IsTrue(new Regex("Test[0-9]").IsMatch(entry.Name));
-                var data = new byte[entry.Size];
-                zis.Read(data, 0, data.Length);
-                using (var ms = new MemoryStream(data))                
-                using (var reader = new StreamReader(ms))
-                {
-                    var textRead = reader.ReadToEnd();
-                    Assert.IsTrue(text + entry.Name == textRead);
-                }
-                zis.CloseEntry();
-                try
-                {
-                    entry = zis.GetNextEntry();
-                } catch (ZipException ex)
-                {
-                    entry = null;
-                }
-            }
+           
         }
 
         [TestMethod()]
         public async Task GetPicturesTest()
         {
             var pictureSaved = GetPictures().Where(p => p.GroupId == GroupId);
-            var picture = await executor.GetPictures(GroupId, pictureSaved.Select(p => p.Id).ToList());
+            var picture = executor.GetPictures(GroupId, pictureSaved.Select(p => p.Id).ToList());
 
             Assert.IsNotNull(picture);
             Assert.IsTrue(picture.Count == 2);
-            Assert.IsTrue(picture.Result.Length > 20);
         }
 
         [TestMethod()]
         public async Task GetPictureTest()
         {
             var pictureSaved = GetPictures().First();
-            var picture = await executor.GetPicture(pictureSaved.GroupId, pictureSaved.Id);
+            var picture = executor.GetPicture<Picture>(pictureSaved.GroupId, pictureSaved.Id);
 
             Assert.IsNotNull(picture);
-            Assert.IsTrue(picture.Count == 1);
-            using(var reader = new StreamReader(picture.Result))
-            {
-                var text = reader.ReadToEnd();
-                Assert.AreEqual("Test StringTest1", text);
-            }
+            Assert.IsTrue(picture.GroupId.Equals(pictureSaved.GroupId));           
         }
 
         [TestMethod()]
