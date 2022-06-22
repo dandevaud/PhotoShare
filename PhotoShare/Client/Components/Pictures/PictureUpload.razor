@@ -1,0 +1,13 @@
+﻿@inject LocalApplicationStorageHandler localStorage;
+@inject HttpClient http;
+@inject StreamHandler streamHandler;
+
+<Radzen.Blazor.RadzenCard>
+    <EditForm Model="typeof(IReadOnlyCollection<IBrowserFile>)">
+        <div Style="height: 200px; width: 200 px;" onclick="document.getElementById('file').click()">
+            <Radzen.Blazor.RadzenIcon Icon="add" Style="height: 200px; width: 200px; font-size: 200px;"></Radzen.Blazor.RadzenIcon>
+        </div>
+        <InputFile id="file" OnChange="@LoadFiles" multiple accept="image/*" hidden></InputFile>
+        <Radzen.Blazor.RadzenTextBox  @bind-Value="@Uploader" Name="Uploader" Placeholder="Namen eingeben"/>
+    </EditForm>
+</Radzen.Blazor.RadzenCard>

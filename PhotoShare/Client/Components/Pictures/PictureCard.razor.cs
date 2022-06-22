@@ -42,7 +42,7 @@ namespace PhotoShare.Client.Components.Pictures
             } 
             if (!hasEditRights)
             {
-                var uploaderKey = store.GetLocalStorage("UploaderKey");
+                var uploaderKey = store.GetLocalStorage<Guid>("UploaderKey");
                 var response = await http.GetAsync($"api/pictures/HasAdminRights/{pictureUI.picture.GroupId}/{pictureUI.picture.Id}?adminKey={uploaderKey}");
                 if (response.IsSuccessStatusCode)
                 {

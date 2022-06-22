@@ -12,9 +12,14 @@ namespace PhotoShare.Client.BusinessLogic
         }   
 
 
-        public async Task<string> GetLocalStorage(string key,CancellationToken ct = default)
+        public async Task<T?> GetLocalStorage<T>(string key,CancellationToken ct = default)
         {
-           return await storageService.GetItemAsStringAsync(key, ct);
+           return await storageService.GetItemAsync<T?>(key, ct);
+        }
+
+        public async Task SetLocalStorageValue<T>(string key, T value, CancellationToken ct = default)
+        {
+            await storageService.SetItemAsync<T>(key, value, ct);
         }
     }
 }

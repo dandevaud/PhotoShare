@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using PhotoShare.Server.Contracts;
 using PhotoShare.Server.Database.Context;
 using PhotoShare.Shared;
+using PhotoShare.Shared.Request;
 using PhotoShare.Shared.Response;
 
 namespace PhotoShare.Server.Controllers
@@ -43,7 +44,7 @@ namespace PhotoShare.Server.Controllers
         }
 
         [HttpGet("Load/{groupid}/{pictureid}")]
-        public async Task<ActionResult<Stream>> LOadPicture(Guid groupId, Guid pictureId)
+        public async Task<ActionResult<Stream>> LoadPicture(Guid groupId, Guid pictureId)
         {
             return new FileStreamResult(await _pictureLoader.LoadPicture(groupId, pictureId), "image/*");
         }
@@ -59,11 +60,12 @@ namespace PhotoShare.Server.Controllers
         // POST: api/Pictures
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Picture>> PostPicture(Picture picture)
+        public async Task<ActionResult> PostPicture(PictureUploadRequest picture)
         {
-            throw new NotImplementedException();
+            await _crudExecutor.UploadPicture(picture);
+            
 
-            return CreatedAtAction("GetPicture", new { id = picture.Id }, picture);
+            return Ok();
         }
 
         // DELETE: api/Pictures/5

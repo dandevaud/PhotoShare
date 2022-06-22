@@ -1,4 +1,4 @@
-﻿@page "/group/{GroupId}"
+﻿@page "/group/{groupIdString}"
 @using Radzen.Blazor
 @inject NavigationManager nav;
 @inject HttpClient http;
@@ -33,6 +33,8 @@
 
     </div>
 </EditForm>
+
+<PhotoShare.Client.Components.Pictures.PictureOverview GroupId="@GroupId" AdminKey="@adminKey" />
 
 
 

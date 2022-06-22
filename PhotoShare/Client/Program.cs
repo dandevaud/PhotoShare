@@ -15,6 +15,7 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<LocalApplicationStorageHandler>();
+builder.Services.AddScoped<StreamHandler>();
 
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

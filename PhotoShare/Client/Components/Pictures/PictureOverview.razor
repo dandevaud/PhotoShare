@@ -1,6 +1,8 @@
-﻿@inject HttpClient client;
+﻿@page "/picture"
+@inject HttpClient client;
 @inject NotificationService notification;
 
-@foreach(var picture in _picture){
+<PictureUpload GroupId="@GroupId"/>
+@foreach(var picture in _picture?? new List<Shared.Models.PictureUIDto>()){
     <PictureCard pictureUI="@picture"  adminKey="@AdminKey"/>
 }

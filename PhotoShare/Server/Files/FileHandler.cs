@@ -22,25 +22,30 @@ namespace PhotoShare.Server.Files
 
         public async Task SaveToFile(string filePath, Stream stream)
         {
-            using var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-            await stream.CopyToAsync(fs);
-
-
-            if (stream is CryptoStream)
+            var file = new FileInfo(filePath);
+            if (!file?.Directory?.Exists ?? false) file.Directory.Create();
+            using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                if (((CryptoStream)stream).HasFlushedFinalBlock) return;
-                await ((CryptoStream)stream).FlushFinalBlockAsync();
-                stream.Close();
-            }
-            else
-            {
-
-                fs.Flush();
+                if (stream is CryptoStream)
+                {
+                    
+                    var cs = ((CryptoStream)stream);
+                    cs.CopyTo(fs);
+                    if (!cs.HasFlushedFinalBlock)
+                    {
+                        await cs.FlushFinalBlockAsync();
+                        stream.Close();
+                    }
+                }
+                else
+                {
+                    await stream.CopyToAsync(fs);
+                    await stream.FlushAsync();
+                }
+                await fs.FlushAsync();
                 fs.Close();
             }
-            
-            
-            
+
 
         }
     }
