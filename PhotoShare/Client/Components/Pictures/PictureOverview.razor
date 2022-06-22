@@ -2,7 +2,9 @@
 @inject HttpClient client;
 @inject NotificationService notification;
 
-<PictureUpload GroupId="@GroupId"/>
+<div class="d-inline-flex flex-row flex-lg-wrap">
+<PictureUpload GroupId="@GroupId" OnChange="OnChange" />
 @foreach(var picture in _picture?? new List<Shared.Models.PictureUIDto>()){
-    <PictureCard pictureUI="@picture"  adminKey="@AdminKey"/>
+    <PictureCard pictureUI="@picture"  adminKey="@AdminKey" OnChange="OnChange"/>
 }
+</div>

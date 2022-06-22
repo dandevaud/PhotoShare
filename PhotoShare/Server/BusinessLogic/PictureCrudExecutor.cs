@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using PhotoShare.Server.Contracts;
 using PhotoShare.Server.Database.Context;
 using PhotoShare.Shared;
+using PhotoShare.Shared.Extension;
 using PhotoShare.Shared.Request;
 using PhotoShare.Shared.Response;
 using System.IO.Compression;
@@ -44,14 +45,14 @@ namespace PhotoShare.Server.BusinessLogic
 
         public IReadOnlyCollection<PictureDto> GetGroupPictures(Guid groupId)
         {
-            var pictures = _context.Pictures.Where(p => p.GroupId == groupId).ToList();
+            var pictures = _context.Pictures.Where(p => p.GroupId == groupId).Select(p => p.ToPictureDto()).ToList();
             return pictures;
 
         }
 
         public IReadOnlyCollection<PictureDto> GetPictures(Guid groupId, List<Guid> pictureIds)
         {
-            var pictures = _context.Pictures.Where(p => p.GroupId == groupId && pictureIds.Contains(p.Id)).ToList();
+            var pictures = _context.Pictures.Where(p => p.GroupId == groupId && pictureIds.Contains(p.Id)).Select(p => p.ToPictureDto()).ToList();
             return pictures;
 
         }
@@ -85,15 +86,23 @@ namespace PhotoShare.Server.BusinessLogic
         }
 
 
-        public T GetPicture<T>(Guid groupId, Guid pictureId) where T : PictureDto, new()
+      
+
+        public PictureDto GetPictureDto(Guid groupId, Guid pictureId)
+        {
+            return GetPicture(groupId, pictureId).ToPictureDto();
+        }
+
+        public Picture GetPicture(Guid groupId, Guid pictureId) 
         {
             var picture = _context.Pictures.FirstOrDefault(p => p.Id == pictureId) ?? new Shared.Picture();
-            if (picture.GroupId != groupId) return new T();
-            return picture! as T;
+            if (picture.GroupId != groupId) return new Picture();
+
+            return picture;
         }
 
 
-       
+
 
         public async Task UploadPicture(PictureUploadRequest request)
         {
@@ -113,7 +122,8 @@ namespace PhotoShare.Server.BusinessLogic
                 Path = path,
                 Uploader = request.Uploader,
                 UploaderKey = request.UploaderKey,
-                GroupId = request.GroupId
+                GroupId = request.GroupId,
+                ContentType= request.ContentType
             });
             await _context.SaveChangesAsync();
         }

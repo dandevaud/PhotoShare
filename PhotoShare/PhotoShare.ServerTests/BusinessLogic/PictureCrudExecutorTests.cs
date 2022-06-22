@@ -110,7 +110,7 @@ namespace PhotoShare.Server.BusinessLogic.Tests
         public async Task GetPictureTest()
         {
             var pictureSaved = GetPictures().First();
-            var picture = executor.GetPicture<Picture>(pictureSaved.GroupId, pictureSaved.Id);
+            var picture = executor.GetPicture(pictureSaved.GroupId, pictureSaved.Id);
 
             Assert.IsNotNull(picture);
             Assert.IsTrue(picture.GroupId.Equals(pictureSaved.GroupId));           

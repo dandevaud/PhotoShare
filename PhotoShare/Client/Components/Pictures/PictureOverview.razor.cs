@@ -16,6 +16,12 @@ namespace PhotoShare.Client.Components.Pictures
 
         protected async override Task OnParametersSetAsync()
         {
+            await SetPictures();
+            await base.OnParametersSetAsync();
+        }
+
+        private async Task SetPictures()
+        {
             var response = await client.GetAsync($"/api/Pictures/ByGroup/{GroupId}");
 
             if (response.IsSuccessStatusCode)
@@ -26,11 +32,18 @@ namespace PhotoShare.Client.Components.Pictures
                     picture = p,
                     isSelected = false
                 }).ToList() ?? new();
-            } else
+            }
+            else
             {
                 notification.Notify(Radzen.NotificationSeverity.Error, "Fehler aufgetreten", "Beim Laden der Gruppen Bilder ist ein Fehler aufgetreten");
             }
-            await base.OnParametersSetAsync();
+            StateHasChanged();
+        }
+
+        private async Task OnChange()
+        {
+            await SetPictures();
+            StateHasChanged();            
         }
     }
 }

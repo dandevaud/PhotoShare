@@ -1,14 +1,17 @@
 ﻿@inject LocalApplicationStorageHandler store;
 @inject HttpClient http;
+@inject NotificationService notification;
 
-<Radzen.Blazor.RadzenCard>
-    <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected"></Radzen.Blazor.RadzenCheckBox>
-    <Radzen.Blazor.RadzenImage Path="@(path)" Style="max-height: 200px; max-width: 200 px;"></Radzen.Blazor.RadzenImage>
+<Radzen.Blazor.RadzenCard @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="justify-content-between" >
+    <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected" Style="position: absolute;" disabled></Radzen.Blazor.RadzenCheckBox>
     @if (isEdit)
-    {
-        <div class="btn-group">
-            <Radzen.Blazor.RadzenButton ButtonStyle=ButtonStyle.Danger>Löschen</Radzen.Blazor.RadzenButton>
-        </div>
+    {       
+            <button class="btn btn-danger" style="position: absolute; right: 25px;" @onclick="DeletePicture">X</button>
     }
+    <Radzen.Blazor.RadzenImage Path="@(path)" Style="max-height: 200px; max-width: 200px;"></Radzen.Blazor.RadzenImage>
+    
+    @if (!string.IsNullOrEmpty(pictureUI.picture.Uploader)) {
+           <p> Uploader: @(pictureUI.picture.Uploader)</p>
+     }
 
 </Radzen.Blazor.RadzenCard>

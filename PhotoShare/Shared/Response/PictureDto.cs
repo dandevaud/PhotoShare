@@ -17,5 +17,18 @@ namespace PhotoShare.Shared.Response
         public string fileName { get; set; }
         public DateTime Date { get; set; }
         public string? Uploader { get; set; }
+
+        public PictureDto() { }
+        public PictureDto (Picture pic)
+        {
+            Id = pic.Id;
+            Uploader = pic.Uploader;
+            GroupId = pic.GroupId;
+            fileName = pic.fileName;
+            Date = pic.Date;
+
+        }
+
+       
     }
 }

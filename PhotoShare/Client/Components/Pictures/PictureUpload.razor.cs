@@ -11,8 +11,12 @@ namespace PhotoShare.Client.Components.Pictures
     {
         [Parameter]
         public Guid GroupId { get; set; }
+        [Parameter]
+        public EventCallback OnChange { get; set; }
         private string Uploader;
         private Guid UploaderKey;
+
+
         private async Task LoadFiles(InputFileChangeEventArgs e)
         {
             var uploadRequests = e.GetMultipleFiles().Select(async f => {
@@ -25,8 +29,11 @@ namespace PhotoShare.Client.Components.Pictures
             }
             );
             await Task.WhenAll(uploadRequests);
-            StateHasChanged();
             
+            await OnChange.InvokeAsync();
+            StateHasChanged();
+
+
         }
 
         protected async override Task OnParametersSetAsync()

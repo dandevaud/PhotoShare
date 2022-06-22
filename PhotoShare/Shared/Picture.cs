@@ -15,6 +15,7 @@ namespace PhotoShare.Shared
         public string Path { get; set; }
         public byte[] IV { get; set; }
         public Guid UploaderKey { get; set; }
+        public string ContentType { get; set; }
 
         public PictureDto GetDto()
         {
