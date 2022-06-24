@@ -27,22 +27,28 @@ namespace PhotoShare.Client.Components.Pictures
         private async Task SetPictures()
         {
             container.IsLoading = true;
-            var response = await client.GetAsync($"/api/Pictures/ByGroup/{GroupId}");
+            try
+            {
+                var response = await client.GetAsync($"/api/Pictures/ByGroup/{GroupId}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                var responseContent = await response.Content.ReadFromJsonAsync<List<PictureDto>>();
-                _picture = responseContent?.Select(p => new PictureUIDto()
+                if (response.IsSuccessStatusCode)
                 {
-                    picture = p,
-                    isSelected = false
-                }).ToList() ?? new();
+                    var responseContent = await response.Content.ReadFromJsonAsync<List<PictureDto>>();
+                    _picture = responseContent?.Select(p => new PictureUIDto()
+                    {
+                        picture = p,
+                        isSelected = false
+                    }).ToList() ?? new();
+                }
+                else
+                {
+                    notification.Notify(Radzen.NotificationSeverity.Error, "Fehler aufgetreten", "Beim Laden der Gruppen Bilder ist ein Fehler aufgetreten");
+                }
             }
-            else
+            finally
             {
-                notification.Notify(Radzen.NotificationSeverity.Error, "Fehler aufgetreten", "Beim Laden der Gruppen Bilder ist ein Fehler aufgetreten");
+                container.IsLoading = false;
             }
-            container.IsLoading = false;
             StateHasChanged();
             
         }
@@ -55,7 +61,15 @@ namespace PhotoShare.Client.Components.Pictures
 
         private void SelectAll()
         {
-            _picture.ForEach(p => p.isSelected = true);            
+            container.IsLoading = true;
+            try
+            {
+                _picture.ForEach(p => p.isSelected = true);
+            }
+            finally
+            {
+                container.IsLoading = false;
+            }
         }
 
         private void DeSelectAll()
@@ -90,24 +104,35 @@ namespace PhotoShare.Client.Components.Pictures
 
         private async Task DeleteSelection()
         {
+           
             var delete = await ShowDeletionDialog();
             if (delete)
             {
                 var toDelete = _picture.Where(p => p.isSelected);
+                SemaphoreSlim sema = new SemaphoreSlim(100, 100);
+
                 container.IsLoading = true;
                 try
                 {
                     foreach (var picture in toDelete)
                     {
-                        HttpResponseMessage? response = null;
-                        if (AdminKey != null) { response = await client.DeleteAsync($"api/pictures/{picture.picture.GroupId}/{picture.picture.Id}/{AdminKey}"); }
-                        if (!(response?.IsSuccessStatusCode ?? false))
+                        await sema.WaitAsync();
+                        try
                         {
-                            var guid = await store.GetLocalStorage<Guid>("UploaderKey");
-                            if (guid != null && guid != Guid.Empty)
+                            HttpResponseMessage? response = null;
+                            if (AdminKey != null && AdminKey != Guid.Empty) { response = await client.DeleteAsync($"api/pictures/{picture.picture.GroupId}/{picture.picture.Id}/{AdminKey}"); }
+                            if (!(response?.IsSuccessStatusCode ?? false))
                             {
-                                await client.DeleteAsync($"api/pictures/{picture.picture.GroupId}/{picture.picture.Id}/{guid}");
+                                var guid = await store.GetLocalStorage<Guid>("UploaderKey");
+                                if (guid != null && guid != Guid.Empty)
+                                {
+                                    await client.DeleteAsync($"api/pictures/{picture.picture.GroupId}/{picture.picture.Id}/{guid}");
+                                }
                             }
+                        }
+                        finally
+                        {
+                            sema.Release();
                         }
 
                     }
