@@ -1,0 +1,12 @@
+﻿.intro {
+    text-align: center;
+}
+
+.text {
+    text-align: start;
+}
+
+.left, .right {
+    justify-content: space-evenly;
+    min-height: 50vh;
+}
