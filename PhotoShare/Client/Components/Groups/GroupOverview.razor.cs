@@ -42,17 +42,25 @@ namespace PhotoShare.Client.Components.Groups
 
         private async Task GetGroup()
         {
-            var getGroup = http.GetAsync($"/api/groups/{GroupId}");
-            var getIsAdmin = http.GetAsync($"/api/groups/hasAccess/{GroupId}?adminkey={adminKey}");
-            var groupdResponse = await getGroup;
-            var isAdminResponse = await getIsAdmin;
-            if (groupdResponse.IsSuccessStatusCode)
+            container.IsLoading = true;
+            try
             {
-                Group = await groupdResponse.Content.ReadFromJsonAsync<Group>() ?? new Group();
-            } else
+                var getGroup = http.GetAsync($"/api/groups/{GroupId}");
+                var getIsAdmin = http.GetAsync($"/api/groups/hasAccess/{GroupId}?adminkey={adminKey}");
+                var groupdResponse = await getGroup;
+                var isAdminResponse = await getIsAdmin;
+                if (groupdResponse.IsSuccessStatusCode)
+                {
+                    Group = await groupdResponse.Content.ReadFromJsonAsync<Group>() ?? new Group();
+                }
+                else
+                {
+                    await ShowErrorLoadingGroup();
+                    return;
+                }
+            } finally
             {
-                await ShowErrorLoadingGroup();
-                return ;
+                container.IsLoading = false;
             }
         }
 

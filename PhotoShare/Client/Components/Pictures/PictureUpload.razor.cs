@@ -15,6 +15,7 @@ namespace PhotoShare.Client.Components.Pictures
         public EventCallback OnChange { get; set; }
         private string Uploader;
         private Guid UploaderKey;
+        private static SemaphoreSlim sema = new SemaphoreSlim(200, 200);
 
 
         private async Task LoadFiles(InputFileChangeEventArgs e)
@@ -24,6 +25,9 @@ namespace PhotoShare.Client.Components.Pictures
             var error = false;
             
             var tasks = uploadRequests.Select(async f => {
+                await sema.WaitAsync();
+            try
+            {
                 var data = await streamHandler.GetBytesFromBrowserfile(f);
                 var request = new PictureUploadRequest(GroupId, UploaderKey, Uploader, f)
                 {
@@ -31,6 +35,11 @@ namespace PhotoShare.Client.Components.Pictures
                 };
                 var response = await http.PostAsJsonAsync("/api/Pictures", request);
                 if (!response.IsSuccessStatusCode) error = true;
+            } finally
+            {
+                var openQueueSpots = sema.Release();
+                    Console.WriteLine($"There are {openQueueSpots} open spots in the queue");
+                }
             }
             );
             await Task.WhenAll(tasks);
