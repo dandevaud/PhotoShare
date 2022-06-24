@@ -10,5 +10,6 @@ namespace PhotoShare.Shared.Response
     {
         public string ContentType { get; set; }
         public Stream Stream { get; set; }
+        public string? Name { get; set; }
     }
 }

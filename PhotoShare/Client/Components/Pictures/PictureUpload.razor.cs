@@ -19,19 +19,32 @@ namespace PhotoShare.Client.Components.Pictures
 
         private async Task LoadFiles(InputFileChangeEventArgs e)
         {
-            var uploadRequests = e.GetMultipleFiles().Select(async f => {
+            container.IsLoading = true;
+            var uploadRequests = e.GetMultipleFiles(999999);
+            var error = false;
+            
+            var tasks = uploadRequests.Select(async f => {
                 var data = await streamHandler.GetBytesFromBrowserfile(f);
                 var request = new PictureUploadRequest(GroupId, UploaderKey, Uploader, f)
                 {
                     Data = data
                 };
-                await http.PostAsJsonAsync("/api/Pictures", request);
+                var response = await http.PostAsJsonAsync("/api/Pictures", request);
+                if (!response.IsSuccessStatusCode) error = true;
             }
             );
-            await Task.WhenAll(uploadRequests);
-            
+            await Task.WhenAll(tasks);
+            container.IsLoading = false;
+
             await OnChange.InvokeAsync();
-            StateHasChanged();
+            if (error)
+            {
+                notification.Notify(Radzen.NotificationSeverity.Error, "Fehler beim Hochladen", "Es gab einen Fehler beim Hochladen, es kann sein, dass nicht alle Bilder hochgeladen wurden.");
+            } else
+            {
+                notification.Notify(Radzen.NotificationSeverity.Success, "Bilder erfoglreich hochgeladen");
+            }
+            
 
 
         }

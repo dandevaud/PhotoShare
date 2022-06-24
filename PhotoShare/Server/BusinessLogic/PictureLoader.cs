@@ -3,6 +3,7 @@ using PhotoShare.Shared;
 using PhotoShare.Shared.Extension;
 using PhotoShare.Shared.Request;
 using PhotoShare.Shared.Response;
+using System.IO.Compression;
 
 namespace PhotoShare.Server.BusinessLogic
 {
@@ -29,9 +30,41 @@ namespace PhotoShare.Server.BusinessLogic
             return new PictureLoadResponse()
             {
                 Stream = stream,
-                ContentType = picture.ContentType
+                ContentType = picture.ContentType,
+                Name = picture.fileName
             };
             
+        }
+
+
+
+        public async Task<PictureLoadResponse> LoadPictures(Guid groupId, IReadOnlyCollection<Guid> pictures)
+        {
+            var ms = new MemoryStream();
+            using var zippedStream = new ZipArchive(ms, ZipArchiveMode.Create, true);
+            var nameCountDict = new Dictionary<string, int>();
+
+                foreach (var picture in pictures)
+                {
+                    
+                    var response = await LoadPicture(groupId, picture);
+                    var fileName = nameCountDict.TryGetValue(response.Name, out var count) ? count+"_"+response.Name : nameCountDict.TryAdd(response.Name, 0) ? response.Name : response.Name;
+                    nameCountDict[response.Name] = nameCountDict[response.Name] + 1;
+                    var entry = zippedStream.CreateEntry(fileName);
+                    using (var zipEntryStream = entry.Open())
+                    {
+                        await response.Stream.CopyToAsync(zipEntryStream);
+                    }
+
+                }
+            zippedStream.Dispose();
+            ms.Seek(0, SeekOrigin.Begin);
+            return new PictureLoadResponse()
+            {
+                Stream = ms,
+                ContentType = "application/zip"
+            };
+
         }
     }
 }

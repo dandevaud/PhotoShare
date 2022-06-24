@@ -16,6 +16,8 @@ namespace PhotoShare.Client.Components.Pictures
         [Parameter]
         public EventCallback OnChange { get; set; }
 
+        private ElementReference Card { get; set; }
+
         private string path = "";
         private bool isEdit = false;
         private Guid? isEditKey;
@@ -27,16 +29,41 @@ namespace PhotoShare.Client.Components.Pictures
 
         protected async override Task OnParametersSetAsync()
         {
+           
             await CheckEditRight();
-            SetPath();
             await base.OnParametersSetAsync();
             StateHasChanged();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await SetUpObserver();
+            }
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
+
+        public async Task SetUpObserver()
+        {
+            await observer.Observe(Card, (entries) =>
+            {
+                var entry = entries.FirstOrDefault();
+                if (entry.IsIntersecting)
+                {
+                    SetPath();
+                    StateHasChanged();
+                }
+            });
+        }
+
+      
+
         private async Task CheckEditRight()
         {
             var hasEditRights = false;
-            if (adminKey != null)
+            if (adminKey != null && adminKey != Guid.Empty)
             {
                var response = await http.GetAsync($"api/pictures/HasAdminRights/{pictureUI.picture.GroupId}/{pictureUI.picture.Id}?adminKey={adminKey}");
                 if (response.IsSuccessStatusCode)
@@ -59,9 +86,11 @@ namespace PhotoShare.Client.Components.Pictures
             StateHasChanged();
         }
 
+      
+
         private async Task DeletePicture()
         {
-           
+            container.IsLoading = true;
             var response = await http.DeleteAsync($"api/pictures/{pictureUI.picture.GroupId}/{pictureUI.picture.Id}/{isEditKey}");
             if (!response.IsSuccessStatusCode)
             {
@@ -79,6 +108,7 @@ namespace PhotoShare.Client.Components.Pictures
                 notification.Notify(Radzen.NotificationSeverity.Success, "Erfolgreich gelöscht", "Bild wurde erfolgreich gelöscht");
             }
             await OnChange.InvokeAsync();
+            container.IsLoading = false;
         }
     }
 }

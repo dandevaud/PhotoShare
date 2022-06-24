@@ -1,10 +1,35 @@
 ﻿@page "/picture"
 @inject HttpClient client;
 @inject NotificationService notification;
+@inject StateContainer container;
+@inject DialogService dialog;
+@inject LocalApplicationStorageHandler store;
+@inject IJSRuntime JS;
 
+<div class="d-inline-flex flex-row justify-content-end" style="width: 100%; padding: 0 50px 20px 0; ">
+    <div class="btn-group">
+        @if (_picture?.All(p => p.isSelected) ?? false)
+        {
+             <button class="btn btn-light" @onclick="DeSelectAll">Selektion aufheben</button>
+        } else {
+            <button class="btn btn-light" @onclick="SelectAll">Alle auswählen</button>
+        }
+        <button class="btn btn-info" @onclick="DownloadSelection">Auswahl herunterladen</button>
+        <button class="btn btn-danger" @onclick="DeleteSelection">Auswahl löschen</button>
+    </div>
+</div>
 <div class="d-inline-flex flex-row flex-lg-wrap">
 <PictureUpload GroupId="@GroupId" OnChange="OnChange" />
 @foreach(var picture in _picture?? new List<Shared.Models.PictureUIDto>()){
     <PictureCard pictureUI="@picture"  adminKey="@AdminKey" OnChange="OnChange"/>
 }
 </div>
+
+
+@code {
+    private async Task<bool> ShowDeletionDialog()
+    {
+        var result = await dialog.Confirm("Löschung bestätigen!", $"Sind Sie sicher dass Sie die ausgewählten Bilder (Total: {_picture.Where(p => p.isSelected).Count()}) löschen möchten? Es werden nur jene Bilder gelöscht für welche Sie auch die entsprechenden Rechte haben.", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nein" });
+        return result ?? false;
+    }
+}

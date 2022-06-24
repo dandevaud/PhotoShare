@@ -51,6 +51,13 @@ namespace PhotoShare.Server.Controllers
             return new FileStreamResult(picture.Stream,picture.ContentType);
         }
 
+        [HttpPost("Load/{groupid}")]
+        public async Task<ActionResult> LoadPicture(Guid groupId,  IReadOnlyCollection<Guid> pictures)
+        {
+            var picture = await _pictureLoader.LoadPictures(groupId, pictures);
+            return new FileStreamResult(picture.Stream, picture.ContentType);
+        }
+
         // GET: api/Pictures/5
         [HttpGet("HasAdminRights/{groupid}/{pictureid}")]
         public async Task<ActionResult<bool>> GetHasAdminRights(Guid groupId, Guid pictureId, [FromQuery] Guid adminKey)

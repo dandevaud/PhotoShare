@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
 using PhotoShare.Server.Database.Configuration;
 using PhotoShare.Server.Database.Context;
 using PhotoShare.Server.IoC;
@@ -13,6 +14,20 @@ builder.Services.BindServices();
 
 
 builder.Services.AddDbContext<PhotoShareContext>(options => options.AddCorrectDatabase(builder.Configuration));
+if (string.IsNullOrEmpty(builder.Configuration.GetValue<string>("FileSaveLocation"))) {
+    var dict = new Dictionary<string, string>()
+    {
+        {"FileSaveLocation", Environment.CurrentDirectory + "/Photos" }
+    };
+    builder.Configuration.AddInMemoryCollection(dict);
+    
+}
+
+DirectoryInfo saveDir = new DirectoryInfo(builder.Configuration.GetValue<string>("FileSaveLocation"));
+if (!saveDir.Exists)
+{
+    saveDir.Create();
+}
 
 var app = builder.Build();
 

@@ -18,7 +18,6 @@ namespace PhotoShare.Server.BusinessLogic
         private readonly IEncryptionHandler _encryptionHandler;
         private readonly IFileHandler _fileHandler;
         private readonly IConfiguration _configuration;
-        private readonly string _directory = Environment.CurrentDirectory;
 
         public PictureCrudExecutor(PhotoShareContext context, IEncryptionHandler encryptionHandler, IFileHandler fileHandler, IConfiguration config)
         {
@@ -112,7 +111,7 @@ namespace PhotoShare.Server.BusinessLogic
             aes.Key = key;
             using var ms = new MemoryStream(request.Data);
             using var stream = _encryptionHandler.EncryptStream(ms,aes.Key,aes.IV);
-            var path = $"{(String.IsNullOrEmpty(_configuration.GetValue<string>("FileSaveLocation"))?_directory :_configuration.GetValue<string>("FileSaveLocation"))}/{request.GroupId}/{Guid.NewGuid()}";
+            var path = $"{_configuration.GetValue<string>("FileSaveLocation")}/{request.GroupId}/{Guid.NewGuid()}";
             await _fileHandler.SaveToFile(path, stream);
             _context.Pictures.Add(new Shared.Picture()
             {
