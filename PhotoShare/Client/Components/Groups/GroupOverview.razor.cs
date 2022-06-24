@@ -10,7 +10,14 @@ namespace PhotoShare.Client.Components.Groups
     public partial class GroupOverview : ComponentBase
     {
         [Parameter]
-        public string GroupId { get; set; }
+        public string GroupIdString { get => GroupId.ToString();
+            set
+            {
+                GroupId = Guid.Parse(value);
+            }               
+            }
+
+        public Guid GroupId { get; set; }
 
         private Guid adminKey { get; set; }
         private Group Group { get; set; }

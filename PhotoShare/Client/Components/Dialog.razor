@@ -1,0 +1,40 @@
+﻿@inject DialogService dialog;
+@inject StateContainer container;
+<Radzen.Blazor.RadzenDialog />
+@code {
+
+
+    private void LoadDialog()
+    {
+       dialog.Open("", ds =>
+        @<div class="d-flex justify-content-center">
+            <div class="d-flex flex-column justify-content-center">
+                   
+                <div class="spinner-border" role="status" style="width: 3rem; height:3rem;">                            
+                </div>  
+                 <strong>Laden...</strong>
+                        
+            </div>
+        </div>
+    , new DialogOptions() { ShowTitle = false, CloseDialogOnEsc = false });
+
+    }
+
+
+    private void LoadingStateHasChanged(){
+        if (container.IsLoading)
+        {
+            LoadDialog();
+        } else
+        {
+            dialog.Close();
+        }
+    }
+
+
+    protected override void OnInitialized()
+    {
+        container.OnLoadChange += LoadingStateHasChanged;
+        base.OnInitialized();
+    }
+}
