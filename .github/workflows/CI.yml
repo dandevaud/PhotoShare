@@ -18,9 +18,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
-      working-directory: src/Photoshare
+      run: dotnet restore PhotoShare.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build PhotoShare.sln --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test PhotoShare.sln --no-build --verbosity normal
