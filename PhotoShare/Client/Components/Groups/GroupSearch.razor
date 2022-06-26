@@ -1,6 +1,7 @@
 ﻿@inject HttpClient Http;
 @inject NavigationManager navManager;
 @inject NotificationService notification;
+@inject StateContainer container;
 <div class="@(isVertical ? "d-flex flex-column w-100 justify-content-evenly":"")">
     @if(isVertical){
          <div class=" w-100 text-center align-self-start"><h3>Gruppe Suchen</h3></div>
