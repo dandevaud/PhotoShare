@@ -7,10 +7,9 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  build:
-
+ deployment:
     runs-on: ubuntu-latest
-
+    environment: buildcheck
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -28,8 +27,5 @@ jobs:
       working-directory: ./PhotoShare
       
       
-  deployment:
-    runs-on: ubuntu-latest
-    environment: buildcheck
-    steps:
-      - name: CheckBuild
+  
+
