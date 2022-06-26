@@ -26,3 +26,10 @@ jobs:
     - name: Test
       run: dotnet test PhotoShare.sln --no-build --verbosity normal
       working-directory: ./PhotoShare
+      
+      
+  deployment:
+    runs-on: ubuntu-latest
+    environment: buildcheck
+    steps:
+      - name: CheckBuild
