@@ -2,9 +2,9 @@ name: Docker latest
 
 on:
   push:
-    branches: [ releases/**, R_** ]
+    branches: [ main ]
   pull_request:
-    branches: [ releases/**, R_** ]
+    branches: [ main ]
 
 jobs:
 
