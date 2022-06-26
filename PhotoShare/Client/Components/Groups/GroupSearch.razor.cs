@@ -15,37 +15,48 @@ namespace PhotoShare.Client.Components.Groups
 
         private async Task OnClick()
         {
-            if (Guid.TryParse(GroupGuid, out var result))
+            container.IsLoading = true;
+            try
             {
-                
-                var response = await Http.GetAsync($"api/Groups/{result.ToString()}");
-                if (response.IsSuccessStatusCode)
+                if (Guid.TryParse(GroupGuid, out var result))
                 {
-                    var feedback = await response.Content.ReadAsStringAsync();
-                    navManager.NavigateTo($"group/{GroupGuid}");
-                } else
-                {
-                   if( response.StatusCode == System.Net.HttpStatusCode.NotFound)
+
+                    var response = await Http.GetAsync($"api/Groups/{result.ToString()}");
+                    if (response.IsSuccessStatusCode)
                     {
-                        notification.Notify(new Radzen.NotificationMessage()
+                        var feedback = await response.Content.ReadAsStringAsync();
+                        navManager.NavigateTo($"group/{GroupGuid}");
+                    }
+                    else
+                    {
+                        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                         {
-                            Severity = Radzen.NotificationSeverity.Error,
-                            Detail = $"Die angegebene Guid {GroupGuid} wurde nicht gefunden",
-                            Duration = 5000,
-                            Summary = "Nicht gefunden"
-                        });
+                            notification.Notify(new Radzen.NotificationMessage()
+                            {
+                                Severity = Radzen.NotificationSeverity.Error,
+                                Detail = $"Die angegebene Guid {GroupGuid} wurde nicht gefunden",
+                                Duration = 5000,
+                                Summary = "Nicht gefunden"
+                            });
+                        }
                     }
                 }
-            } else
-            {
-                notification.Notify(new Radzen.NotificationMessage()
+                else
                 {
-                    Severity = Radzen.NotificationSeverity.Error,
-                    Detail = $"Die angegebene Guid {GroupGuid} ist invalid",
-                    Duration = 5000,
-                    Summary = "Invalide Guid"
-                });
+                    notification.Notify(new Radzen.NotificationMessage()
+                    {
+                        Severity = Radzen.NotificationSeverity.Error,
+                        Detail = $"Die angegebene Guid {GroupGuid} ist invalid",
+                        Duration = 5000,
+                        Summary = "Invalide Guid"
+                    });
+                }
+            }
+            finally
+            {
+                container.IsLoading = false;
             }
         }
+        
     }
 }

@@ -11,9 +11,11 @@ namespace PhotoShare.Server.BusinessLogic
     {
 
         private readonly PhotoShareContext _context;
+        private readonly IPictureCrudExecutor _pictureCrudExecutor;
 
-        public GroupCrudExecutor(PhotoShareContext context)
+        public GroupCrudExecutor(PhotoShareContext context, IPictureCrudExecutor pictureCrudExecutor)
         {
+            _pictureCrudExecutor = pictureCrudExecutor;
             _context = context;
         }
 
@@ -51,6 +53,11 @@ namespace PhotoShare.Server.BusinessLogic
         public async Task DeleteGroup(Guid groupId, Guid adminKey)
         {
             if (!HasAdminAccessToGroup(groupId, adminKey)) throw new InsufficientRightsException();
+            var pictures = _context.Pictures.Where(p => p.GroupId == groupId);
+            foreach(var picture in pictures)
+            {
+                await _pictureCrudExecutor.DeletePicture(groupId, picture.Id, adminKey);
+            }
             _context.Groups.Remove(new Group()
             {
                 Id = groupId
