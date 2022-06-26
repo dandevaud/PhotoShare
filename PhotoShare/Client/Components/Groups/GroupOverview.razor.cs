@@ -38,6 +38,7 @@ namespace PhotoShare.Client.Components.Groups
             var query = new Uri(nav.Uri).Query;
             var parsed = QueryHelpers.ParseNullableQuery(query);
             adminKey = (parsed?.TryGetValue("adminkey", out var value) ?? false) ? Guid.TryParse(value, out var result) ? result : Guid.Empty : Guid.Empty;
+
         }
 
         private async Task GetGroup()
@@ -57,6 +58,10 @@ namespace PhotoShare.Client.Components.Groups
                 {
                     await ShowErrorLoadingGroup();
                     return;
+                }
+                if (isAdminResponse.IsSuccessStatusCode)
+                {
+                    isAdmin = (await isAdminResponse.Content.ReadAsStringAsync()).Equals("true", StringComparison.InvariantCultureIgnoreCase);
                 }
             } finally
             {
@@ -83,6 +88,24 @@ namespace PhotoShare.Client.Components.Groups
                     Detail = "Fehler beim Aktualisieren der Gruppe ist aufgetreten",
                     Summary = "Fehler"
                 });
+            }
+        }
+
+        private async Task DeleteGroup()
+        {
+            var response = await ShowDeletionDialog();
+            if (response)
+            {
+                var deleteResponse = await http.DeleteAsync($"/api/groups/{GroupId}?accesskey={adminKey}");
+                if (deleteResponse.IsSuccessStatusCode)
+                {
+                    notification.Notify(NotificationSeverity.Success, "Gruppe wurde gelöscht");
+                    nav.NavigateTo(nav.BaseUri);
+                } else
+                {
+                    notification.Notify(NotificationSeverity.Error, "Fehler beim Löschen der Gruppe", "Ein Fehler beim Löschen der Gruppe ist aufgetreten, bitte versuchen Sie es erneut");
+                }
+
             }
         }
     }

@@ -13,6 +13,7 @@ namespace PhotoShare.Client.Components.Groups
         private Group Group { get; set; } = new Group();
 
         private async Task Create() {
+            container.IsLoading = true;
             if (string.IsNullOrEmpty(Group.Name))
             {
                 notification.Notify(new Radzen.NotificationMessage()
@@ -36,6 +37,7 @@ namespace PhotoShare.Client.Components.Groups
                 return;
             }
             var resp = await response.Content.ReadFromJsonAsync<GroupCreationResponse>();
+            container.IsLoading = false;
             nav.NavigateTo($"/group/success/{resp.Group.Id}/{resp.AdministrationKey}");
         }
     }

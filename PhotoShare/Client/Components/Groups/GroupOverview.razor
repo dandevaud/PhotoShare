@@ -7,32 +7,39 @@
 @inject StateContainer container;
 
 <EditForm Model="typeof(Group)">
-<div class="name">
-        @if (editName)
-        {
-            <RadzenTextBox @bind-Value="Group.Name"></RadzenTextBox>  
-            <button class="btn btn-success" @onclick="UpdatedGroupAsync"><RadzenIcon Icon="done"/></button>
-        } else {
-            <h3>@(Group?.Name)</h3>
-            @if(isAdmin){
-                <a @onclick="() => editName = true"><RadzenIcon Icon="edit"></RadzenIcon></a>
-            }
-        }
+<div class="d-inline-flex flex-row justify-content-between" style="width: 100%; padding: 0 50px 20px 0; ">
+    <div class="d-inline-flex flex-column">
+        <div class="name d-inline-flex flex-row">
+                @if (editName)
+                {
+                    <RadzenTextBox @bind-Value="Group.Name"></RadzenTextBox>  
+                    <button class="btn btn-success" @onclick="UpdatedGroupAsync"><RadzenIcon Icon="done"/></button>
+                } else {
+                    <h3>@(Group?.Name)</h3>
+                    @if(isAdmin){
+                        <a @onclick="() => editName = true"><RadzenIcon Icon="edit"></RadzenIcon></a>
+                    }
+                }
 
-    </div>
-<div class="description">
-      @if (editDescription)
-        {
-            <RadzenTextArea @bind-Value="Group.Description"></RadzenTextArea>  
-            <button class="btn btn-success" @onclick="UpdatedGroupAsync"><RadzenIcon Icon="done"/></button>
-        } else {
-            <div> @(Group?.Description ?? "")</div>
-           @if(isAdmin){
-                <a @onclick="() => editDescription = true"><RadzenIcon Icon="edit"></RadzenIcon></a>
-           }
-        }
+            </div>
+        <div class="description d-inline-flex flex-row">
+              @if (editDescription)
+                {
+                    <RadzenTextArea @bind-Value="Group.Description"></RadzenTextArea>  
+                    <button class="btn btn-success" @onclick="UpdatedGroupAsync"><RadzenIcon Icon="done"/></button>
+                } else {
+                    <div> @(Group?.Description ?? "")</div>
+                   @if(isAdmin){
+                        <a @onclick="() => editDescription = true"><RadzenIcon Icon="edit"></RadzenIcon></a>
+                   }
+                }
 
+        </div>
     </div>
+    <div >
+        <button class="btn btn-danger" @onclick="@DeleteGroup">Gruppe Löschen</button>
+    </div>
+</div>
 </EditForm>
 
 <PhotoShare.Client.Components.Pictures.PictureOverview GroupId="@GroupId" AdminKey="@adminKey" />
@@ -56,4 +63,12 @@
     </div>
          );
     }
+
+
+    private async Task<bool> ShowDeletionDialog()
+    {
+        var result = await dialog.Confirm("Löschung bestätigen!", $"Sind Sie sicher dass Sie die Gruppe mitsamt den ganzen Bilder löschen möchten? Diese Aktion kann nicht mehr Rückgängig gemacht werden", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nein" });
+        return result ?? false;
+    }
+
 }
