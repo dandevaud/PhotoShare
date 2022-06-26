@@ -83,12 +83,6 @@ namespace PhotoShare.Server.BusinessLogic.Tests
         }
 
         [TestMethod()]
-        public void DeletePictureTest()
-        {
-                        Assert.Fail();
-        }
-
-        [TestMethod()]
         public async Task GetGroupPicturesTest()
         {
             var pictures = executor.GetGroupPictures(GroupId);
@@ -116,12 +110,7 @@ namespace PhotoShare.Server.BusinessLogic.Tests
             Assert.IsTrue(picture.GroupId.Equals(pictureSaved.GroupId));           
         }
 
-        [TestMethod()]
-        public void UploadPictureTest()
-        {
-            Assert.Fail();
-        }
-
+        
 
         private List<Picture> GetPictures()
         {
