@@ -2,7 +2,7 @@
 @inject NavigationManager nav;
 
 <div class="text-center">
-    <h3>Gruppe erfolgreich erstellt!</h3>
+    <h3>Gruppe mit der ID @groupId wurde erfolgreich erstellt!</h3>
     <div class="alert-success alert alert" role="alert">Die Gruppe wurde erfolgreiche erstellt und kann unter <a href="@(nav.BaseUri)group/@(groupId)">@(nav.BaseUri)group/@(groupId)</a> aufgerufen werden</div>
      <div class="alert-warning alert alert" role="alert">Um in der Gruppe zu editieren, bitte folgenden Link verwenden <a href="@(nav.BaseUri)group/@(groupId)?adminkey=@(adminkey)">@(nav.BaseUri)group/@(groupId)?adminkey=@(adminkey)</a></div>
 </div>

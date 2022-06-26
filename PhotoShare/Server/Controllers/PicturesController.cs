@@ -32,7 +32,7 @@ namespace PhotoShare.Server.Controllers
         [HttpGet("ByGroup/{groupId}")]
         public async Task<ActionResult<IReadOnlyCollection<PictureDto>>> GetGroupPictures(Guid groupId)
         {
-            return Ok(_crudExecutor.GetGroupPictures(groupId));
+            return Ok(_crudExecutor.GetGroupPictures(groupId).OrderByDescending(p => p.Date));
         }
 
 

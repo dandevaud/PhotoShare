@@ -27,14 +27,6 @@ namespace PhotoShare.Client.Components.Pictures
             path = "/api/Pictures/Load/"+pictureUI.picture.GroupId +"/"+ pictureUI.picture.Id;
         }
 
-        protected async override Task OnParametersSetAsync()
-        {
-           
-            await CheckEditRight();
-            await base.OnParametersSetAsync();
-            StateHasChanged();
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -47,12 +39,13 @@ namespace PhotoShare.Client.Components.Pictures
 
         public async Task SetUpObserver()
         {
-            await observer.Observe(Card, (entries) =>
+            await observer.Observe(Card, async (entries) =>
             {
                 var entry = entries.FirstOrDefault();
                 if (entry.IsIntersecting)
                 {
                     SetPath();
+                    await CheckEditRight();
                     StateHasChanged();
                 }
             });
