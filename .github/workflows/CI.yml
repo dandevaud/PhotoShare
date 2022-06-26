@@ -22,5 +22,7 @@ jobs:
       working-directory: ./PhotoShare
     - name: Build
       run: dotnet build PhotoShare.sln --no-restore
+      working-directory: ./PhotoShare
     - name: Test
       run: dotnet test PhotoShare.sln --no-build --verbosity normal
+      working-directory: ./PhotoShare
