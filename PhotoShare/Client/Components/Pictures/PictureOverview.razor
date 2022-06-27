@@ -23,7 +23,14 @@
 @foreach(var picture in _picture?? new List<Shared.Models.PictureUIDto>()){
     <PictureCard pictureUI="@picture"  adminKey="@AdminKey" OnChange="OnChange"/>
 }
+   
 </div>
+ @if (!_picture?.Any() ?? true )
+    {
+        <div class="alert alert-warning" role="alert">
+          Es wurden noch keine Bilder hochgeladen.
+        </div>
+    }
 
 
 @code {

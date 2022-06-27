@@ -79,10 +79,16 @@ namespace PhotoShare.Client.Components.Pictures
             StateHasChanged();
         }
 
-      
+
+        private async Task<bool> ShowDeletionDialog()
+        {
+            var result = await dialog.Confirm("Löschung bestätigen!", $"Sind Sie sicher dass Sie das Bild löschen möchten? Diese Aktion kann nicht mehr Rückgängig gemacht werden", new Radzen.ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nein" });
+            return result ?? false;
+        }
 
         private async Task DeletePicture()
         {
+            if (!(await ShowDeletionDialog())) return;
             container.IsLoading = true;
             var response = await http.DeleteAsync($"api/pictures/{pictureUI.picture.GroupId}/{pictureUI.picture.Id}/{isEditKey}");
             if (!response.IsSuccessStatusCode)
