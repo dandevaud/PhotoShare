@@ -37,7 +37,10 @@
         </div>
     </div>
     <div >
-        <button class="btn btn-danger" @onclick="@DeleteGroup">Gruppe Löschen</button>
+        @if(isAdmin)
+        {
+            <button class="btn btn-danger" @onclick="@DeleteGroup">Gruppe Löschen</button>
+        }
     </div>
 </div>
 </EditForm>
@@ -53,13 +56,13 @@
     
    var result = await dialog.OpenAsync("Fehler aufgetreten", ds =>
     @<div>
-                    <p Style="margin-bottom: 1rem">Ein Fehler beim Laden der Gruppe ist aufgetreten, bitte Überprüfen Sie die Eingabe.</p>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <RadzenButton Text="Ok" Click="() => {ds.Close(true); nav.NavigateTo(nav.BaseUri); }" Style="margin-bottom: 10px; width: 150px" />
-                                    
-                            </div>
-                        </div>
+                            <p Style="margin-bottom: 1rem">Ein Fehler beim Laden der Gruppe ist aufgetreten, bitte Überprüfen Sie die Eingabe.</p>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <RadzenButton Text="Ok" Click="() => {ds.Close(true); nav.NavigateTo(nav.BaseUri); }" Style="margin-bottom: 10px; width: 150px" />
+                                            
+                                    </div>
+                                </div>
     </div>
          );
     }
