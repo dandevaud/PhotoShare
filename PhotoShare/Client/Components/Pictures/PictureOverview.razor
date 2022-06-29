@@ -7,6 +7,7 @@
 @inject IJSRuntime JS;
 
 <div class="d-inline-flex flex-row justify-content-end" style="width: 100%; padding: 0 50px 20px 0; ">
+    
     <div class="btn-group">
         @if (_picture?.All(p => p.isSelected) ?? false)
         {
@@ -18,6 +19,13 @@
         <button class="btn btn-danger" @onclick="DeleteSelection">Auswahl löschen</button>
     </div>
 </div>
+@if (!_picture?.Any() ?? true )
+    {
+        <div class="alert alert-warning mt-3 w-100" role="alert">
+          Es wurden noch keine Bilder hochgeladen.
+        </div>
+    }
+
 <div class="d-inline-flex flex-row flex-lg-wrap">
 <PictureUpload GroupId="@GroupId" OnChange="OnChange" />
 @foreach(var picture in _picture?? new List<Shared.Models.PictureUIDto>()){
@@ -25,12 +33,7 @@
 }
    
 </div>
- @if (!_picture?.Any() ?? true )
-    {
-        <div class="alert alert-warning" role="alert">
-          Es wurden noch keine Bilder hochgeladen.
-        </div>
-    }
+ 
 
 
 @code {

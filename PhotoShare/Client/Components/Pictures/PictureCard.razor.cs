@@ -109,5 +109,11 @@ namespace PhotoShare.Client.Components.Pictures
             await OnChange.InvokeAsync();
             container.IsLoading = false;
         }
+
+        private string ShortenName(string name)
+        {
+            if (name.Length < 33) return name;
+            return name.Substring(0, 30) + "...";
+        }
     }
 }

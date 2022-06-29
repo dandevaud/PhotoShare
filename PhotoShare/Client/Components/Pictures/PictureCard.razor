@@ -9,14 +9,16 @@
 
 <div @ref="Card">
     <Radzen.Blazor.RadzenCard @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="justify-content-between card" Style="width: 275px; height:275px;" >
+        <div class="align-self-center">
         <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected" Style="position: absolute;" disabled></Radzen.Blazor.RadzenCheckBox>
         @if (isEdit)
         {       
-                <button class="btn btn-danger" style="position: absolute; right: 25px;" @onclick="DeletePicture">X</button>
+                <button class="btn btn-danger" style="position: absolute; right: 36.5px;" @onclick="DeletePicture">X</button>
         }
         <Radzen.Blazor.RadzenImage Path="@path" Style="max-height: 200px; max-width: 200px;" />
-        <div>
-            <p>@(pictureUI.picture.fileName)</p>
+        </div>
+        <div class="align-self-center">
+            <p>@(ShortenName(pictureUI.picture.fileName))</p>
             <p> Hochgeladen: @(pictureUI.picture.Date.ToString("dd.MM.yyyy"))@(string.IsNullOrEmpty(pictureUI.picture.Uploader) ? "":$" von {pictureUI.picture.Uploader}")</p>
         </div>
 
