@@ -6,6 +6,7 @@
 @inject NotificationService notification;
 @inject StateContainer container;
 
+<PageTitle>PhotoShare - @(Group?.Name)</PageTitle>
 <EditForm Model="typeof(Group)">
 <div class="d-inline-flex flex-row justify-content-between" style="width: 100%; padding: 0 50px 20px 0; ">
     <div class="d-inline-flex flex-column">
@@ -56,13 +57,13 @@
     
    var result = await dialog.OpenAsync("Fehler aufgetreten", ds =>
     @<div>
-                            <p Style="margin-bottom: 1rem">Ein Fehler beim Laden der Gruppe ist aufgetreten, bitte Überprüfen Sie die Eingabe.</p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <RadzenButton Text="Ok" Click="() => {ds.Close(true); nav.NavigateTo(nav.BaseUri); }" Style="margin-bottom: 10px; width: 150px" />
-                                            
+                                <p Style="margin-bottom: 1rem">Ein Fehler beim Laden der Gruppe ist aufgetreten, bitte Überprüfen Sie die Eingabe.</p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <RadzenButton Text="Ok" Click="() => {ds.Close(true); nav.NavigateTo(nav.BaseUri); }" Style="margin-bottom: 10px; width: 150px" />
+                                                
+                                        </div>
                                     </div>
-                                </div>
     </div>
          );
     }
