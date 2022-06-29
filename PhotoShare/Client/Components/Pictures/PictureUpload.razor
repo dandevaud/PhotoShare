@@ -4,16 +4,19 @@
 @inject StateContainer container;
 @inject NotificationService notification;
 
-<Radzen.Blazor.RadzenCard Style="width: 275px; height:275px;">
-    <EditForm Model="typeof(IReadOnlyCollection<IBrowserFile>)">
-        <div class="justify-content-center" Style="height: 200px; width: 200 px;" onclick="document.getElementById('file').click()">
-            <Radzen.Blazor.RadzenIcon Icon="add" Style="height: 150px; width: 150px; font-size: 200px;"></Radzen.Blazor.RadzenIcon>
+<Radzen.Blazor.RadzenCard Style="width: 275px; height:275px; display:flex;">
+    <div class="justify-content-center flex-row">
+    <EditForm Model="typeof(IReadOnlyCollection<IBrowserFile>)" class="d-inline-flex flex-column w-100">
+        <div class="justify-content-center d-inline-flex flex-column align-content-center align-items-center" Style="height: 200px; width: 200 px;" onclick="document.getElementById('file').click()">
+             <Radzen.Blazor.RadzenIcon Icon="add" Style="height: 150px; width: 150px; font-size: 200px;"></Radzen.Blazor.RadzenIcon>
+           
             <p>Weitere Bilder hinzufügen</p>
         </div>
         <InputFile id="file" OnChange="@LoadFiles" multiple accept="image/*" hidden></InputFile>
         
         <Radzen.Blazor.RadzenTextBox  @bind-Value="@Uploader" Name="Uploader" Placeholder="Gib hier deinen Namen ein"/>
     </EditForm>
+    </div>
 </Radzen.Blazor.RadzenCard>
 
 @code {
