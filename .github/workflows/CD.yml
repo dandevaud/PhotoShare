@@ -3,6 +3,8 @@ name: Docker latest
 on:
   pull_request:
     branches: [ main ]
+  push:
+    branches: [main]
 
 jobs:
 
