@@ -23,6 +23,10 @@ namespace PhotoShare.Server.Database.Configuration
         {
             var configModel = config.GetSection("Config").Get<SQLiteConfiguration>();
             builder.UseSqlite($"Data Source={Environment.CurrentDirectory}/{configModel.DataSource}");
+            FileInfo db = new FileInfo($"{Environment.CurrentDirectory}/{configModel.DataSource}");
+            if(!(db?.Directory?.Exists ?? true)){               
+                    db?.Directory?.Create();
+            }
             return builder;
         }
     }
