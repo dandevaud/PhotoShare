@@ -7,7 +7,7 @@
 @inject IIntersectionObserverService observer;
 @inject DialogService dialog;
 
-<div @ref="Card" @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="card justify-content-between flex-column m-1">
+<div @ref="Card" @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="card justify-content-between flex-column m-1 @(pictureUI.isSelected ? "selected" : "")" >
         <div class="align-self-center align-content-center mt-2">
             <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected" Style="position: absolute;" disabled></Radzen.Blazor.RadzenCheckBox>
             @if (isEdit)
