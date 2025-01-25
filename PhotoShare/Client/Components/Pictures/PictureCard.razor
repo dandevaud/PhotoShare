@@ -7,20 +7,18 @@
 @inject IIntersectionObserverService observer;
 @inject DialogService dialog;
 
-<div @ref="Card">
-    <Radzen.Blazor.RadzenCard @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="justify-content-between card" Style="width: 275px; height:275px;" >
-        <div class="align-self-center">
-        <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected" Style="position: absolute;" disabled></Radzen.Blazor.RadzenCheckBox>
-        @if (isEdit)
-        {       
-                <button class="btn btn-danger" style="position: absolute; right: 36.5px;" @onclick="DeletePicture">X</button>
-        }
-        <Radzen.Blazor.RadzenImage Path="@path" Style="max-height: 200px; max-width: 200px;" />
+<div @ref="Card" @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="card justify-content-between flex-column m-1 @(pictureUI.isSelected ? "selected" : "")" >
+        <div class="align-self-center align-content-center mt-2">
+            <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected" Style="position: absolute;" disabled></Radzen.Blazor.RadzenCheckBox>
+            @if (isEdit)
+            {       
+                    <button class="btn btn-danger" style="position: absolute; right: 36.5px;" @onclick="DeletePicture">X</button>
+            }
+            <img class="img" src="@path" />
         </div>
-        <div class="align-self-center">
-            <p>@(ShortenName(pictureUI.picture.fileName))</p>
-            <p> Hochgeladen: @(pictureUI.picture.Date.ToString("dd.MM.yyyy"))@(string.IsNullOrEmpty(pictureUI.picture.Uploader) ? "":$" von {pictureUI.picture.Uploader}")</p>
+        <div class="align-self-center h-100 m-1 m-md-0" style="justify-items: center;">
+            <div class="text ml-1">@(ShortenName(pictureUI.picture.fileName))</div>
+            <div class="text ml-1">@($"Hochgeladen von {pictureUI.picture.Uploader}")</div>
         </div>
 
-    </Radzen.Blazor.RadzenCard>
 </div>
