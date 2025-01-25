@@ -55,14 +55,7 @@ main {
         flex-direction: column;
     }
 
-    .mainnavbar {
-        width: 100%;
-        height: 70px;
-        position: sticky;
-        top: 0;
-        background-color: black;
-        vertical-align: central;
-    }
+   
 
     .top-row {
         position: relative;

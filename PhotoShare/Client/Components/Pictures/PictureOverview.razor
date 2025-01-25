@@ -6,9 +6,9 @@
 @inject LocalApplicationStorageHandler store;
 @inject IJSRuntime JS;
 
-<div class="d-inline-flex flex-row justify-content-end" style="width: 100%; padding: 0 50px 20px 0; ">
+<div class="d-inline-flex flex-row justify-content-end mr-4" style="width: 100%; padding-bottom: 10px; ">
     
-    <div class="btn-group">
+    <div class="btn-group d-inline-flex flex-row flex-wrap px-4">
         @if (_picture?.All(p => p.isSelected) ?? false)
         {
              <button class="btn btn-light" @onclick="DeSelectAll">Selektion aufheben</button>
@@ -26,7 +26,7 @@
         </div>
     }
 
-<div class="d-inline-flex flex-row flex-lg-wrap">
+<div class="d-inline-flex flex-row flex-wrap justify-content-center">
 <PictureUpload GroupId="@GroupId" OnChange="OnChange" />
 @foreach(var picture in _picture?? new List<Shared.Models.PictureUIDto>()){
     <PictureCard pictureUI="@picture"  adminKey="@AdminKey" OnChange="OnChange"/>
