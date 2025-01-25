@@ -67,19 +67,23 @@ a, .btn-link {
     @media screen and (min-width: 768px ) {
         height: auto;
         min-height: 100px;
+        max-height: 200px;
         width: 200px;
     }
 
     @media screen and (max-width: 767.98px ) {
         height: auto;
         min-height: 75px;
+        max-height: 150px;
         width: 150px;
     }
 
     @media screen and (max-width: 575.98px ) {
         height: auto;
         min-height: 50px;
+        max-height: 100px;
         width: 100px;
+
     }
 
     max-width: 200px;
