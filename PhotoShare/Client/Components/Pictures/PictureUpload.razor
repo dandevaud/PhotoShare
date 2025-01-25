@@ -5,10 +5,10 @@
 @inject NotificationService notification;
 
 
-<div class="card m-1" Style="display:flex;">
+<div class="card picture-card m-1" Style="display:flex;">
     <div class="justify-content-center flex-row">
     <EditForm Model="typeof(IReadOnlyCollection<IBrowserFile>)" class="d-inline-flex flex-column w-100 align-items-center">
-        <div class="justify-content-center d-inline-flex flex-column align-content-center align-items-center img" onclick="document.getElementById('file').click()">
+        <div class="justify-content-center d-inline-flex flex-column align-content-center align-items-center card-img" onclick="document.getElementById('file').click()">
              <Radzen.Blazor.RadzenIcon Icon="add" class="d-none d-md-flex" Style="height: 150px; width: 150px; font-size: 200px;"></Radzen.Blazor.RadzenIcon>
              <Radzen.Blazor.RadzenIcon Icon="add"class="d-none d-sm-flex d-md-none"  Style="height: 100px; width: 100px; font-size: 200px;">Add</Radzen.Blazor.RadzenIcon>
              <Radzen.Blazor.RadzenIcon Icon="add" class="d-flex d-sm-none" Style="height: 50px; width: 50px; font-size: 100px;">Add</Radzen.Blazor.RadzenIcon>
