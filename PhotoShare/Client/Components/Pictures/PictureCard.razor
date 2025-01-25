@@ -7,18 +7,18 @@
 @inject IIntersectionObserverService observer;
 @inject DialogService dialog;
 
-<div @ref="Card" @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="card justify-content-between flex-column m-1 @(pictureUI.isSelected ? "selected" : "")" >
+<div @ref="Card" @onclick="() => pictureUI.isSelected = !pictureUI.isSelected" class="card picture-card justify-content-between flex-column m-1 @(pictureUI.isSelected ? "selected" : "")" >
         <div class="align-self-center align-content-center mt-2">
             <Radzen.Blazor.RadzenCheckBox @bind-Value="pictureUI.isSelected" Style="position: absolute;" disabled></Radzen.Blazor.RadzenCheckBox>
             @if (isEdit)
             {       
                     <button class="btn btn-danger" style="position: absolute; right: 36.5px;" @onclick="DeletePicture">X</button>
             }
-            <img class="img" src="@path" />
+            <img class="card-img" src="@path" />
         </div>
         <div class="align-self-center h-100 m-1 m-md-0" style="justify-items: center;">
-            <div class="text ml-1">@(ShortenName(pictureUI.picture.fileName))</div>
-            <div class="text ml-1">@($"Hochgeladen von {pictureUI.picture.Uploader}")</div>
+            <div class="card-text ml-1">@(ShortenName(pictureUI.picture.fileName))</div>
+            <div class="card-text ml-1">@($"Hochgeladen von {pictureUI.picture.Uploader}")</div>
         </div>
 
 </div>
