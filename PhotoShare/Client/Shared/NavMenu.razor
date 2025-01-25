@@ -1,33 +1,27 @@
-﻿<div class="top-row ps-3 navbar-nav navbar-dark">
-       <div class="nav-item px-3">
-           <div class="d-inline-flex">
-             <h4>Photoshare</h4>
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All" style="margin-left: 10px;">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-            </div>
+﻿<nav class="navbar navbar-expand-md navbar-dark pull-right">
+    <div class="container-fluid bg-black">
+        <a class="navbar-brand h4" href="#">Photoshare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav nav-fill w-100">
+               <li class="nav-item">
+                    <a class="nav-link" href="" style="margin-left: 10px;">
+                        <span class="oi oi-home" aria-hidden="true"></span> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link btn-outline-success">
+                        <a href="group" class="btn btn-outline-success text-success">
+                            <Radzen.Blazor.RadzenIcon Icon="add_circle" Style="vertical-align: bottom;" /> Gruppe erstellen
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item d-block">
+                    <PhotoShare.Client.Components.Groups.GroupSearch isHeader=true />
+                </li>
+            </ul>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="group">
-                <button class="btn btn-outline-success">
-                <Radzen.Blazor.RadzenIcon Icon="add_circle" Style="vertical-align: bottom;" /> Gruppe erstellen
-                </button>
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <PhotoShare.Client.Components.Groups.GroupSearch isHeader=true />
-        </div>
-</div>
-
-
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+    </div>
+</nav>

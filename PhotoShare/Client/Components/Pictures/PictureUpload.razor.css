@@ -1,0 +1,48 @@
+﻿
+.card {
+	@media (min-width: 768px ) {
+		height: 275px;
+		width: 275px;
+	}
+
+	@media (max-width: 768px ) {
+		height: 200px;
+		width: 200px;
+	}
+
+	@media (max-width: 576px ) {
+		height: 150px;
+		width: 150px;
+	}
+
+	aspect-ratio: 1/1;
+	max-width: 275px;
+	max-height: 275px;
+}
+
+.img {
+	@media (min-width: 768px ) {
+		height: auto;
+		min-height: 100px;
+		width: 200px;
+	}
+
+	@media (max-width: 768px ) {
+		height: auto;
+		min-height: 75px;
+		width: 150px;
+	}
+
+
+	@media (max-width: 576px ) {
+		height: auto;
+		min-height: 50px;
+		width: 100px;
+	}
+
+	max-width: 200px;
+	max-height: 200px;
+	object-fit: cover;
+	object-position: center;
+	aspect-ratio: 1/1;
+}
