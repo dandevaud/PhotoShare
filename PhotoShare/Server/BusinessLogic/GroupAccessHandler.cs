@@ -22,7 +22,7 @@ namespace PhotoShare.Server.BusinessLogic
 
 		protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, GroupAccessRequirement requirement)
 		{
-			HttpContext httpContext = _httpContextAccessor.HttpContext;
+			HttpContext? httpContext = _httpContextAccessor.HttpContext;
 			var route = httpContext?.GetEndpoint();
 			Guid? groupIdGuid = null;
 			if (route == null)
