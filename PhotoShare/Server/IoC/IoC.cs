@@ -19,6 +19,7 @@ namespace PhotoShare.Server.IoC
 			serviceCollection.AddTransient<IIdentityService, IdentityService>();
 			serviceCollection.AddSingleton<PasswordHasher<GroupPassword>>();
 			serviceCollection.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+			serviceCollection.AddTransient<IGroupIdExtractor, GroupIdExtractor>();
 
 			return serviceCollection;
 		}

@@ -5,6 +5,5 @@
 		public Guid GroupId { get; set; }
 		public string Password { get; set; }
 
-		public Uri ReturnUrl { get; set; }
 	}
 }

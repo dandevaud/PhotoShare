@@ -8,7 +8,9 @@ using System.Security.Claims;
 
 namespace PhotoShare.Server.Controllers
 {
-	public class LoginController : Controller
+	[Route("api/[controller]")]
+	[ApiController]
+	public class LoginController : ControllerBase
 	{
 		public LoginController(IIdentityService identityService)
 		{
@@ -31,7 +33,27 @@ namespace PhotoShare.Server.Controllers
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-				return Redirect(model.ReturnUrl.ToString());
+				return Ok();
+			}
+			return Unauthorized();
+		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		public async Task<IActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			return Redirect("/");
+		}
+
+		[HttpPost("SetPassword")]
+		[AllowAnonymous]
+		public async Task<IActionResult> SetPassword(LoginModelRequest model)
+		{
+			if (await _identityService.SetPasswordForGroup(model.GroupId, model.Password))
+			{
+				await Login(model);
+				return Ok();
 			}
 			return Unauthorized();
 		}

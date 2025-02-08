@@ -33,6 +33,7 @@ builder.Services.AddAuthorization(options =>
 	options.AddPolicy("GroupAccessPolicy", policy => policy.Requirements.Add(new GroupAccessRequirement()));
 });
 builder.Services.AddScoped<IAuthorizationHandler, GroupAccessHandler>();
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, GroupAcccesMiddlewareResultHandler>();
 
 
 if (string.IsNullOrEmpty(builder.Configuration.GetValue<string>("FileSaveLocation")))

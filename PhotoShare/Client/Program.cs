@@ -23,6 +23,11 @@ builder.Services.AddSingleton<StateContainer>();
 builder.Services.AddIntersectionObserver();
 builder.Services.AddBlazorDownloadFile(ServiceLifetime.Scoped);
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+var clientHandler = new HttpClientHandler()
+{
+	AllowAutoRedirect = false,
+};
+
+builder.Services.AddScoped(sp => new HttpClient(clientHandler) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress), });
 
 await builder.Build().RunAsync();

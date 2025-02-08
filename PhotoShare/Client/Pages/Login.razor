@@ -1,0 +1,7 @@
+﻿@page "/login/{groupid}"
+@inject HttpClient client;
+@inject NavigationManager nav;
+@inject NotificationService notification;
+
+<PhotoShare.Client.Components.Login.LoginComponent IsPasswordSetup="false" OnLoginCallback="@HandleSubmit"></PhotoShare.Client.Components.Login.LoginComponent>
+

@@ -1,0 +1,8 @@
+﻿<EditForm Model="typeof(PhotoShare.Shared.Request.LoginModelRequest)">
+    <div class="form-control align-content-between justify-content-center">
+        <Radzen.Blazor.RadzenTextBox id="@nameof(PhotoShare.Shared.Request.LoginModelRequest.Password)" @bind-Value="loginModelRequest.Password" Style="width:100%" Placeholder="@(IsPasswordSetup ? "Optional: Password eingeben" : "Bitte password eingeben")" />
+    </div>
+    <div class="form-control align-content-center justify-content-center">
+        <button class="btn btn-success w-75" type="submit" @onclick="OnLogin">@(IsPasswordSetup? "Passwort setzen" : "Einloggen")</button>
+    </div>
+</EditForm>

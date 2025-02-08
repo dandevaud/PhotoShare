@@ -38,11 +38,16 @@ namespace PhotoShare.Server.BusinessLogic
 		public async Task<bool> SetPasswordForGroup(Guid group, string password)
 		{
 			var groupPassword = await _context.GroupPasswords.FirstOrDefaultAsync(gp => gp.GroupId == group);
-			if (groupPassword == null)
+			if (groupPassword != null)
 			{
 				return false;
 			}
-			groupPassword.HashedPassword = _passwordHasher.HashPassword(groupPassword, password);
+			groupPassword = new GroupPassword()
+			{
+				HashedPassword = _passwordHasher.HashPassword(groupPassword, password),
+				GroupId = group
+			};
+			_context.GroupPasswords.Add(groupPassword);
 			await _context.SaveChangesAsync();
 			return true;
 		}
