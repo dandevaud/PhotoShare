@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using PhotoShare.Server.Contracts;
 using PhotoShare.Server.Database.Context;
 using PhotoShare.Shared.Extension;
 using PhotoShare.Shared.Request;
@@ -12,15 +11,13 @@ namespace PhotoShare.Server.BusinessLogic
 {
 	public class GroupAccessHandler : AuthorizationHandler<GroupAccessRequirement>, IAuthorizationRequirement
 	{
-		public GroupAccessHandler(PhotoShareContext context, IIdentityService identityService, IHttpContextAccessor httpContextAccessor)
+		public GroupAccessHandler(PhotoShareContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
-			_identityService = identityService;
 			_httpContextAccessor = httpContextAccessor;
 		}
 
 		private readonly PhotoShareContext _context;
-		private readonly IIdentityService _identityService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
 		protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, GroupAccessRequirement requirement)
