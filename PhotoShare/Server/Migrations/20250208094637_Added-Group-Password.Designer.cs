@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PhotoShare.Server.Database.Context;
 
@@ -10,9 +11,10 @@ using PhotoShare.Server.Database.Context;
 namespace PhotoShare.Server.Migrations
 {
     [DbContext(typeof(PhotoShareContext))]
-    partial class PhotoShareContextModelSnapshot : ModelSnapshot
+    [Migration("20250208094637_Added-Group-Password")]
+    partial class AddedGroupPassword
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
