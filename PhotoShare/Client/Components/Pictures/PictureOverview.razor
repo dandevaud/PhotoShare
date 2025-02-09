@@ -7,16 +7,16 @@
 @inject IJSRuntime JS;
 
 <div class="d-inline-flex flex-row justify-content-end mr-4" style="width: 100%; padding-bottom: 10px; ">
-    
+
     <div class="btn-group d-inline-flex flex-row flex-wrap px-4">
         @if (_picture?.All(p => p.isSelected) ?? false)
         {
-             <button class="btn btn-light" @onclick="DeSelectAll">Selektion aufheben</button>
+            <button class="btn btn-light" @onclick="DeSelectAll">Selektion aufheben</button>
         } else {
             <button class="btn btn-light" @onclick="SelectAll">Alle auswählen</button>
         }
-        <button class="btn btn-info" @onclick="DownloadSelection">Auswahl herunterladen</button>
-        <button class="btn btn-danger" @onclick="DeleteSelection">Auswahl löschen</button>
+            <button class="btn btn-info" @onclick="DownloadSelection">Auswahl herunterladen</button>
+            <button class="btn btn-danger" @onclick="DeleteSelection">Auswahl löschen</button>
     </div>
 </div>
 @if (!_picture?.Any() ?? true )
