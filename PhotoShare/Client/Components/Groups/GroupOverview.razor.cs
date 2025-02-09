@@ -55,7 +55,7 @@ namespace PhotoShare.Client.Components.Groups
 				{
 					Group = await groupdResponse.Content.ReadFromJsonAsync<Group>() ?? new Group();
 				}
-				else if (groupdResponse.ReasonPhrase == "opaqueredirct")
+				else if (groupdResponse.ReasonPhrase == "opaqueredirect")
 				{
 
 					nav.NavigateTo($"/Login/{GroupId}?redirectUrl={nav.Uri.ToString()}");
