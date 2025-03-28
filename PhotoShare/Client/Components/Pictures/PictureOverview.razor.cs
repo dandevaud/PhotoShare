@@ -39,6 +39,10 @@ namespace PhotoShare.Client.Components.Pictures
 						isSelected = false
 					}).ToList() ?? new();
 				}
+				else if (response.ReasonPhrase == "opaqueredirect")
+				{
+					return;
+				}
 				else
 				{
 					notification.Notify(Radzen.NotificationSeverity.Error, "Fehler aufgetreten", "Beim Laden der Gruppen Bilder ist ein Fehler aufgetreten");
