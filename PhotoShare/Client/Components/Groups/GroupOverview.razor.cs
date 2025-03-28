@@ -28,10 +28,11 @@ namespace PhotoShare.Client.Components.Groups
 
 		protected async override Task OnParametersSetAsync()
 		{
+			await base.OnParametersSetAsync();
 			SetAdminKey();
 			await GetGroup();
 
-			await base.OnParametersSetAsync();
+
 		}
 
 		private void SetAdminKey()
@@ -57,9 +58,8 @@ namespace PhotoShare.Client.Components.Groups
 				}
 				else if (groupdResponse.ReasonPhrase == "opaqueredirect")
 				{
-
 					nav.NavigateTo($"/Login/{GroupId}?redirectUrl={nav.Uri.ToString()}");
-
+					return;
 				}
 				else
 				{

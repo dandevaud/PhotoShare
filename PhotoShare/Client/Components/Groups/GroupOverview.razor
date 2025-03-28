@@ -45,14 +45,15 @@
     </div>
 </div>
 </EditForm>
-
-<PhotoShare.Client.Components.Pictures.PictureOverview GroupId="@GroupId" AdminKey="@adminKey" />
+@if(Group != null){
+    <PhotoShare.Client.Components.Pictures.PictureOverview GroupId="@GroupId" AdminKey="@adminKey" />
+}
 
 
 
 
 @code {
- async Task ShowErrorLoadingGroup()
+ private async Task ShowErrorLoadingGroup()
  {
     
    var result = await dialog.OpenAsync("Fehler aufgetreten", ds =>
